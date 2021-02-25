@@ -1,4 +1,4 @@
-package com.github.tobi812.ideaphpsprykerplugin
+package com.github.tobi812.sprykerplugin
 
 import com.intellij.AbstractBundle
 import org.jetbrains.annotations.NonNls

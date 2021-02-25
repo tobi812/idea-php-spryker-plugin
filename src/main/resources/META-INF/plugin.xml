@@ -1,19 +1,30 @@
 <idea-plugin>
-    <id>com.github.tobi812.ideaphpsprykerplugin</id>
-    <name>idea-php-spryker-plugin</name>
-    <vendor>tobi812</vendor>
+    <id>com.github.tobi812.sprykerplugin</id>
+    <name>Spryker</name>
+    <vendor email="tobias.rosenstock@project-a.com" url="http://www.project-a.com">Project A Ventures</vendor>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.jetbrains.php</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.tobi812.ideaphpsprykerplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.tobi812.ideaphpsprykerplugin.services.MyProjectService"/>
+        <applicationService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyApplicationService"/>
+        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyProjectService"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.tobi812.ideaphpsprykerplugin.listeners.MyProjectManagerListener"
+        <listener class="com.github.tobi812.sprykerplugin.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
+
+    <actions>
+        <action id="SprykerUpdateClassDocBlockAction"
+                class="pav.sprykerFileCreator.action.SprykerUpdateClassDocBlockAction"
+                text="SprykerUpdateClassDocBlockAction" description="Update Spryker class docBlock">
+            <add-to-group group-id="CodeMenu" anchor="first"/>
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="shift alt U"/>-->
+        </action>
+    </actions>
+
 </idea-plugin>

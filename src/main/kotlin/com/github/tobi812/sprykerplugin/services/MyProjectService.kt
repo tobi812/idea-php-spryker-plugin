@@ -1,6 +1,6 @@
-package com.github.tobi812.ideaphpsprykerplugin.services
+package com.github.tobi812.sprykerplugin.services
 
-import com.github.tobi812.ideaphpsprykerplugin.MyBundle
+import com.github.tobi812.sprykerplugin.MyBundle
 import com.intellij.openapi.project.Project
 
 class MyProjectService(project: Project) {
