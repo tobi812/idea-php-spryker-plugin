@@ -1,10 +1,28 @@
 package com.github.tobi812.sprykerplugin.models
 
+import com.github.tobi812.sprykerplugin.config.SprykerPluginConfig
+import com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand
+import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProvider
+import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
+import com.github.tobi812.sprykerplugin.models.finder.ClassFinder
+import com.github.tobi812.sprykerplugin.models.finder.ClassFinderInterface
+import com.github.tobi812.sprykerplugin.models.generator.*
+import com.github.tobi812.sprykerplugin.models.manager.ClassManager
+import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
+import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcher
+import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
+import com.github.tobi812.sprykerplugin.models.renderer.PhpClassRenderer
+import com.github.tobi812.sprykerplugin.models.renderer.PhpClassRendererInterface
+import com.github.tobi812.sprykerplugin.models.resolver.ClassResolver
+import com.github.tobi812.sprykerplugin.models.resolver.ClassResolverInterface
+import com.github.tobi812.sprykerplugin.models.resolver.PathResolver
+import com.github.tobi812.sprykerplugin.models.resolver.PathResolverInterface
+import com.github.tobi812.sprykerplugin.models.writer.FileWriter
+import com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface
 import com.intellij.openapi.project.Project
 
 class ModelFactory {
     private val definitionProvider: DefinitionProviderInterface
-    private var classResolver: ClassResolverInterface? = null
 
     init {
         this.definitionProvider = createDefinitionProvider()
@@ -31,16 +49,13 @@ class ModelFactory {
         )
     }
 
-    private fun createClassResolver(project: Project, projectName: String): ClassResolverInterface? {
-        if (classResolver == null) {
-            classResolver = ClassResolver(
-                    this.getConfig(project, projectName).getProjectName(),
-                    this.getConfig(project, projectName).getCoreNames(),
-                    this.createClassFinder(project),
-                    this.definitionProvider
-            )
-        }
-        return classResolver
+    private fun createClassResolver(project: Project, projectName: String): ClassResolverInterface {
+        return ClassResolver(
+            this.getConfig(project, projectName).projectName,
+            this.getConfig(project, projectName).coreNames,
+            this.createClassFinder(project),
+            this.definitionProvider
+        )
     }
 
     private fun createClassFinder(project: Project): ClassFinderInterface {
@@ -60,7 +75,7 @@ class ModelFactory {
     }
 
     private fun createPathResolver(project: Project, projectName: String): PathResolverInterface {
-        return PathResolver(getConfig(project, projectName).getBasePath())
+        return PathResolver(getConfig(project, projectName).basePath)
     }
 
     private fun createFileWriter(project: Project): FileWriterInterface {
@@ -88,5 +103,4 @@ class ModelFactory {
     private fun getConfig(project: Project, projectName: String): SprykerPluginConfig {
         return SprykerPluginConfig.getInstance(project, projectName)
     }
-
 }

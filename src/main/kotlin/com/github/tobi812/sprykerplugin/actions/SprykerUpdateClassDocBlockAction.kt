@@ -1,6 +1,9 @@
 package com.github.tobi812.sprykerplugin.actions
 
 import com.github.tobi812.sprykerplugin.models.ModelFactory
+import com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand
+import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
+import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
@@ -22,6 +25,7 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
                 val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.createClassTypeMatcher()
                 val projectName: String = classTypeMatcher.matchProjectName(phpClass.fqn)
                 val command: UpdateDocBlockCommand = modelFactory.createUpdateDocBlockCommand(project, projectName)
+
                 try {
                     command.updateDocBlock(phpClass, project)
                 } catch (exception: Exception) {
@@ -35,7 +39,8 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
         val phpClass = PhpPsiUtil.getParentByCondition<PhpClass>(psiElement, PhpClass.INSTANCEOF) ?: return false
         val modelFactory = ModelFactory()
         val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.createClassTypeMatcher()
-        val classDefinition: ClassDefinitionInterface = classTypeMatcher.matchClassType(phpClass.fqn)
+        val classDefinition: ClassDefinitionInterface? = classTypeMatcher.matchClassType(phpClass.fqn)
+
         return classDefinition != null
     }
 
@@ -44,6 +49,6 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
     }
 
     override fun getText(): String {
-        return "Update Spryker DocBlock"
+        return "Update Spryker docBlock"
     }
 }
