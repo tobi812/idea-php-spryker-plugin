@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.NonEmptyInputValidator
 import com.intellij.openapi.util.ThrowableComputable
+import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -41,9 +42,15 @@ class ClientPluginCreateAction :
         val mkdirs = MkDirs(newName, directory)
         return arrayOf(WriteAction.compute<PsiFile, RuntimeException> {
             mkdirs.directory.createFile(
-                getFileName(mkdirs.newName)
+                this.getFileName(mkdirs.newName)
             )
         })
+    }
+
+    protected fun getFileName(newName: String): String {
+        return if (!FileUtilRt.getExtension(newName).isEmpty()) {
+            newName
+        } else newName + ".php"
     }
 
     override fun getErrorTitle(): String {
