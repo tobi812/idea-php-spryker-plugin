@@ -49,6 +49,10 @@ class ModelFactory {
         )
     }
 
+    fun createDefinitionProvider(): DefinitionProviderInterface {
+        return DefinitionProvider()
+    }
+
     private fun createClassResolver(project: Project, projectName: String): ClassResolverInterface {
         return ClassResolver(
             this.getConfig(project, projectName).projectName,
@@ -80,10 +84,6 @@ class ModelFactory {
 
     private fun createFileWriter(project: Project): FileWriterInterface {
         return FileWriter(project)
-    }
-
-    private fun createDefinitionProvider(): DefinitionProviderInterface {
-        return DefinitionProvider()
     }
 
     private fun createParentGenerator(project: Project, projectName: String): ParentGeneratorInterface {

@@ -1,6 +1,8 @@
 package com.github.tobi812.sprykerplugin.actions
 
+import com.github.tobi812.sprykerplugin.constants.SprykerConstants
 import com.github.tobi812.sprykerplugin.models.ModelFactory
+import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
 import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
 import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
 import com.intellij.ide.actions.CreateElementActionBase
@@ -29,12 +31,12 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
         return arrayOfNulls<PsiElement>(1)
     }
 
-    protected fun createClassType(
+    protected open fun createClassType(
         project: Project,
         psiDirectory: PsiDirectory,
         className: String? = null
     ): Array<PsiElement?> {
-        val classType = this.classType
+        val classType: String = this.classType
         val psiElements = arrayOfNulls<PsiElement>(1)
 
         try {
@@ -43,8 +45,8 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
             val projectName: String = classTypeMatcher.matchProjectName(classType, psiDirectory)
             val classConfig = ClassConfig(bundleName, projectName, className)
             val classManager: ClassManagerInterface = this.modelFactory.createClassManager(project, projectName)
-            val psiElement: PsiElement = classManager.handleClass(classType, classConfig)
 
+            val psiElement = classManager.handleClass(psiDirectory, classType, classConfig)
             psiElements[0] = psiElement
         } catch (exception: Exception) {
             exception.printStackTrace()
@@ -58,7 +60,7 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
         val view = LangDataKeys.IDE_VIEW.getData(dataContext) ?: return false
         val dir = view.orChooseDirectory ?: return false
 
-        return classTypeMatchesDir(dir)
+        return this.classTypeMatchesDir(dir)
     }
 
     override fun getCommandName(): String = this.actionName
@@ -67,10 +69,23 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
 
     override fun getErrorTitle(): String = ""
 
-    private fun classTypeMatchesDir(directory: PsiDirectory): Boolean {
+    protected open fun classTypeMatchesDir(directory: PsiDirectory): Boolean {
         return try {
-            val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.createClassTypeMatcher()
-            classTypeMatcher.classTypeMatchesDir(this.classType, directory)
+            val classType: String = this.classType
+            val classTypeMatcher = this.modelFactory.createClassTypeMatcher()
+
+            if (!classTypeMatcher.classTypeMatchesDir(classType, directory)) {
+                return false
+            }
+
+            val bundleName = classTypeMatcher.matchBundleName(classType, directory)
+            val classDefinition: ClassDefinitionInterface = this.modelFactory
+                .createDefinitionProvider()
+                .getDefinitionByType(classType)
+            val className: String = classDefinition.namePattern
+                .replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
+
+            directory.findFile("$className.php") == null
         } catch (exception: Exception) {
             false
         }

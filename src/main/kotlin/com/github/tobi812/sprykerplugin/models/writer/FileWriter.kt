@@ -13,22 +13,26 @@ import java.lang.Exception
 import java.nio.file.Path
 
 class FileWriter(private val project: Project) : FileWriterInterface {
+
     @Throws(Exception::class)
-    override fun writeFile(filePath: String, fileName: String, phpClassContent: String): PsiElement {
-        val fileDirectory = getFileDirectory(filePath)
+    fun writeFile(fileDirectory: PsiDirectory, fileName: String, phpClassContent: String): PsiElement {
         val existingFile = fileDirectory.findFile("$fileName.php")
-            ?: throw Exception("$fileName does already exist.")
+
+        if (existingFile != null) {
+            throw Exception("$fileName does already exist.")
+        }
+
         val file = PsiFileFactory
-            .getInstance(this.project)
+            .getInstance(project)
             .createFileFromText("$fileName.php", PhpFileType.INSTANCE, phpClassContent)
 
         object : WriteCommandAction<Any?>(this.project) {
             @Throws(Throwable::class)
-            override fun run(result: Result<*>) {
+            protected fun run(result: Result<*>) {
                 fileDirectory.add(file)
                 val virtualFile = fileDirectory.findFile("$fileName.php")
                 if (virtualFile != null) {
-                    OpenFileDescriptor(this.project, virtualFile.virtualFile).navigate(true)
+                    OpenFileDescriptor(project, virtualFile.virtualFile).navigate(true)
                 }
             }
 
@@ -36,29 +40,7 @@ class FileWriter(private val project: Project) : FileWriterInterface {
                 return "Create Command"
             }
         }.execute()
+
         return file
-    }
-
-    private fun getFileDirectory(filePath: String): PsiDirectory {
-        var currentDir = this.getPsiDirectory()
-        val pathSegments = filePath.split("/".toRegex()).toTypedArray()
-        for (pathSegment in pathSegments) {
-            var subDirectory = currentDir!!.findSubdirectory(pathSegment)
-            if (subDirectory == null) {
-                subDirectory = currentDir.createSubdirectory(pathSegment)
-            }
-
-            currentDir = subDirectory
-        }
-
-        return currentDir
-    }
-
-    private fun getPsiDirectory(): PsiDirectory? {
-        val basePath: String? = this.project.basePath
-
-        val baseDir = PlatformVirtualFileManager.getInstance().findFileByNioPath(basePath)
-
-        return PsiManager.getInstance(this.project).findDirectory(baseDir)
     }
 }
