@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.renderer.dto;
+package sprykerFileCreator.model.renderer.dto;
 
 import com.intellij.openapi.util.text.StringUtil;
 

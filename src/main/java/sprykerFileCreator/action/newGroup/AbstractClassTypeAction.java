@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.action.newGroup;
+package sprykerFileCreator.action.newGroup;
 
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateElementActionBase;

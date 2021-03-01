@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.ui.handler;
+package sprykerFileCreator.ui.handler;
 
 import pav.sprykerFileCreator.model.generator.SprykerConstants;
 import pav.sprykerFileCreator.model.manager.ClassManagerInterface;

@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.definition.spryker;
+package sprykerFileCreator.model.definition.spryker;
 
 import pav.sprykerFileCreator.model.definition.ClassDefinitionInterface;
 import pav.sprykerFileCreator.model.generator.SprykerConstants;

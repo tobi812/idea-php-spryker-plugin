@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.definition;
+package sprykerFileCreator.model.definition;
 
 import pav.sprykerFileCreator.model.definition.spryker.*;
 

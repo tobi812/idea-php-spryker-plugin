@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.matcher;
+package sprykerFileCreator.model.matcher;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;

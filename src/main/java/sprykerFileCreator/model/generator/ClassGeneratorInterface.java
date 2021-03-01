@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.generator;
+package sprykerFileCreator.model.generator;
 
 import pav.sprykerFileCreator.model.renderer.dto.PhpClassInterface;
 

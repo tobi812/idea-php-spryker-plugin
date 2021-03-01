@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.finder;
+package sprykerFileCreator.model.finder;
 
 import com.intellij.openapi.project.Project;
 import com.jetbrains.php.PhpIndex;

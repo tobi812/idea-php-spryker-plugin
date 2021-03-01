@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.command;
+package sprykerFileCreator.model.command;
 
 import com.intellij.openapi.project.Project;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocComment;

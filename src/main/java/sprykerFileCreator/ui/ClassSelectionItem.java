@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.ui;
+package sprykerFileCreator.ui;
 
 public class ClassSelectionItem {
     private Boolean isClassNameEditable;

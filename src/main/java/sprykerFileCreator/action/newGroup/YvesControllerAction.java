@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.action.newGroup;
+package sprykerFileCreator.action.newGroup;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;

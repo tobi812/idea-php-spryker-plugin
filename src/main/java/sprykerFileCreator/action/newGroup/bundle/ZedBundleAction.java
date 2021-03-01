@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.action.newGroup.bundle;
+package sprykerFileCreator.action.newGroup.bundle;
 
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;

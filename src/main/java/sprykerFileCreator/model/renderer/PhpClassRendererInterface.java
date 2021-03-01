@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.renderer;
+package sprykerFileCreator.model.renderer;
 
 import pav.sprykerFileCreator.model.renderer.dto.DocBlockItem;
 import pav.sprykerFileCreator.model.renderer.dto.PhpClassInterface;

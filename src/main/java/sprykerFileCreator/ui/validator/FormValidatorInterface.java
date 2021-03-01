@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.ui.validator;
+package sprykerFileCreator.ui.validator;
 
 import pav.sprykerFileCreator.ui.SprykerFileCreatorForm;
 import javax.xml.bind.ValidationException;

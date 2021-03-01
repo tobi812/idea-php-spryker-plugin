@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.writer;
+package sprykerFileCreator.model.writer;
 
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;

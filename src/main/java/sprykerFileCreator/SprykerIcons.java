@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator;
+package sprykerFileCreator;
 
 import com.intellij.openapi.util.IconLoader;
 import javax.swing.*;

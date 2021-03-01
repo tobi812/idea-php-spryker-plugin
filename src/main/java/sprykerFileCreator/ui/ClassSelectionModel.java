@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.ui;
+package sprykerFileCreator.ui;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

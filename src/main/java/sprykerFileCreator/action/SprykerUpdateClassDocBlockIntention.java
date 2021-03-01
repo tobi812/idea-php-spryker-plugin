@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.action;
+package sprykerFileCreator.action;
 
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.application.ApplicationManager;

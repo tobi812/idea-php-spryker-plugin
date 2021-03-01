@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.matcher;
+package sprykerFileCreator.model.matcher;
 
 import com.intellij.psi.PsiDirectory;
 import pav.sprykerFileCreator.model.definition.ClassDefinitionInterface;

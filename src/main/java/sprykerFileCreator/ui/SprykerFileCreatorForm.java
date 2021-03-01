@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.ui;
+package sprykerFileCreator.ui;
 
 import com.intellij.openapi.project.Project;
 import pav.sprykerFileCreator.model.generator.SprykerConstants;

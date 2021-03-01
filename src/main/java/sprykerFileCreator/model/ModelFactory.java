@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model;
+package sprykerFileCreator.model;
 
 import com.intellij.openapi.project.Project;
 import pav.sprykerFileCreator.config.SprykerPluginConfig;

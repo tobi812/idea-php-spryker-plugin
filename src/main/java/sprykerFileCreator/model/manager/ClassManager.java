@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator.model.manager;
+package sprykerFileCreator.model.manager;
 
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;

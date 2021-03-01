@@ -1,5 +1,5 @@
 
-package pav.sprykerFileCreator.model.renderer;
+package sprykerFileCreator.model.renderer;
 
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
