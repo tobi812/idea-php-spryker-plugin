@@ -1,4 +1,4 @@
-package pav.sprykerFileCreator
+package com.github.tobi812.sprykerplugin
 
 import com.intellij.openapi.util.IconLoader
 

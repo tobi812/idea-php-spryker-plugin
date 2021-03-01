@@ -1,9 +1,6 @@
 package com.github.tobi812.sprykerplugin.constants
 
 object SprykerConstants {
-    const val BUNDLE_NAME = "bundle_name"
-    const val PROJECT_NAME = "project_name"
-    const val CLASS_NAME = "class_name"
     const val YVES_CONTROLLER = "yves_controller"
     const val YVES_FACTORY = "yves_factory"
     const val YVES_DEPENDENCY_PROVIDER = "yves_dependency_provider"

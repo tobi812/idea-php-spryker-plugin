@@ -7,6 +7,7 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiDirectory
 import org.apache.commons.lang.ArrayUtils
 import java.lang.Exception
+import java.util.ArrayList
 import java.util.regex.Pattern
 
 class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterface) :
@@ -65,29 +66,24 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
         return namespacePattern + "\\\\" + namePattern
     }
 
-    //    public ArrayList<String> matchClassTypesByDir(PsiDirectory directory) {
-    //        Collection<ClassDefinitionInterface> classDefinitions = this.definitionProvider
-    //                .getAllClassDefinitions()
-    //                .values();
-    //
-    //        ArrayList<String> matchedTypes = new ArrayList<String>();
-    //        String dir = directory.toString();
-    //        dir = dir.replace("/", "\\");
-    //
-    //        for (ClassDefinitionInterface classDefinition : classDefinitions) {
-    //
-    //            String bundleName = this.matchBundleName(classDefinition.getClassType(), directory);
-    //            String namespacePattern = this.getNamespacePattern(classDefinition, );
-    //
-    //            Boolean matched = Pattern.matches("^.*" + namespacePattern + WILDCARD, dir);
-    //            if (matched) {
-    //                matchedTypes.add(classDefinition.getClassType());
-    //            }
-    //        }
-    //
-    //        return matchedTypes;
-    //    }
-
+    @Throws(Exception::class)
+    fun matchClassTypesByDir(directory: PsiDirectory): ArrayList<String> {
+        val classDefinitions: Collection<ClassDefinitionInterface> = definitionProvider
+            .allClassDefinitions
+            .values
+        val matchedTypes = ArrayList<String>()
+        var dir = directory.toString()
+        dir = dir.replace("/", "\\")
+        for (classDefinition in classDefinitions) {
+            val bundleName = matchBundleName(classDefinition.classType, directory)
+            val namespacePattern = getNamespacePattern(classDefinition, bundleName, true)
+            val matched = Pattern.matches("^.*" + namespacePattern + WILDCARD, dir)
+            if (matched) {
+                matchedTypes.add(classDefinition.classType)
+            }
+        }
+        return matchedTypes
+    }
 
     @Throws(Exception::class)
     override fun matchBundleName(classType: String, psiDirectory: PsiDirectory): String {

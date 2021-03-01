@@ -1,21 +1,22 @@
 package com.github.tobi812.sprykerplugin.actions.create
 
 import com.github.tobi812.sprykerplugin.actions.AbstractCreateClassTypeAction
+import com.github.tobi812.sprykerplugin.constants.SprykerConstants
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.NonEmptyInputValidator
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import org.apache.commons.lang.StringUtils
-import pav.sprykerFileCreator.SprykerIcons
-import pav.sprykerFileCreator.model.generator.SprykerConstants
-import java.lang.Exception
-import java.util.*
+import com.github.tobi812.sprykerplugin.SprykerIcons
 
 class YvesControllerCreateAction :
     AbstractCreateClassTypeAction("Create Yves Controller", "Create Yves Controller", SprykerIcons.SPRYKER_ICON) {
-    override fun invokeDialog(project: Project, psiDirectory: PsiDirectory): Array<PsiElement> {
-        val classConfig = HashMap<String, String?>()
+
+    override val actionName: String = "Create Yves Controller"
+    override val classType: String = SprykerConstants.YVES_CONTROLLER
+
+    override fun invokeDialog(project: Project, psiDirectory: PsiDirectory): Array<PsiElement?> {
         val controllerName = Messages.showInputDialog(
             "Set Controller Name",
             "Input Controller Name",
@@ -23,30 +24,11 @@ class YvesControllerCreateAction :
             "",
             NonEmptyInputValidator()
         )
+
         if (StringUtils.isBlank(controllerName)) {
             return arrayOfNulls(1)
         }
-        classConfig[SprykerConstants.CLASS_NAME] = controllerName
-        return createClassType(project, psiDirectory, classConfig)
-    }
 
-    @Throws(Exception::class)
-    override fun create(s: String, psiDirectory: PsiDirectory): Array<PsiElement> {
-        return arrayOfNulls(0)
+        return this.createClassType(project, psiDirectory, controllerName)
     }
-
-    override fun getErrorTitle(): String {
-        return null
-    }
-
-    override fun getCommandName(): String {
-        return "Create Yves Controller"
-    }
-
-    override fun getActionName(psiDirectory: PsiDirectory, s: String): String {
-        return "Create Yves Controller"
-    }
-
-    override val classType: String
-        protected get() = SprykerConstants.YVES_CONTROLLER
 }

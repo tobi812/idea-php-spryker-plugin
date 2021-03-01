@@ -16,12 +16,17 @@ import javax.swing.Icon
 abstract class AbstractCreateClassTypeAction protected constructor(text: String, description: String, icon: Icon?) :
     CreateElementActionBase(text, description, icon) {
 
-    private var modelFactory: ModelFactory = ModelFactory()
-
+    private val modelFactory: ModelFactory = ModelFactory()
     protected abstract val classType: String
+    protected abstract val actionName: String
 
     override fun invokeDialog(project: Project, psiDirectory: PsiDirectory): Array<PsiElement?> {
         return this.createClassType(project, psiDirectory)
+    }
+
+    @Throws(Exception::class)
+    override fun create(s: String, psiDirectory: PsiDirectory): Array<PsiElement?> {
+        return arrayOfNulls<PsiElement>(1)
     }
 
     protected fun createClassType(
@@ -56,10 +61,16 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
         return classTypeMatchesDir(dir)
     }
 
+    override fun getCommandName(): String = this.actionName
+
+    override fun getActionName(psiDirectory: PsiDirectory, s: String): String = this.actionName
+
+    override fun getErrorTitle(): String = ""
+
     private fun classTypeMatchesDir(directory: PsiDirectory): Boolean {
         return try {
             val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.createClassTypeMatcher()
-            classTypeMatcher.classTypeMatchesDir(classType, directory)
+            classTypeMatcher.classTypeMatchesDir(this.classType, directory)
         } catch (exception: Exception) {
             false
         }

@@ -18,16 +18,16 @@ class ClassResolver(
     override fun resolveBundleClass(classType: String, bundleName: String): PhpClassInterface? {
         val classDefinition: ClassDefinitionInterface = definitionProvider.getDefinitionByType(classType)
         val classPattern: String =
-            classDefinition.namespacePattern.toString() + "\\" + classDefinition.namePattern
+            classDefinition.namespacePattern + "\\" + classDefinition.namePattern
         val fullQualifiedName: String = classPattern
             .replace(SprykerConstants.PROJECT_NAME_PLACEHOLDER, projectName)
             .replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
 
-        return resolveClass(fullQualifiedName, false, true)
+        return resolveClass(fullQualifiedName, findClassBelow = false, findInterface = true)
     }
 
     override fun resolveClassBelow(fullQualifiedName: String): PhpClassInterface? {
-        return this.resolveClass(fullQualifiedName, true, false)
+        return this.resolveClass(fullQualifiedName, findClassBelow = true, findInterface = false)
     }
 
     override fun resolveClass(

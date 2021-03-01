@@ -4,10 +4,13 @@ import com.intellij.openapi.application.Result
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.PlatformVirtualFileManager
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.*
 import com.jetbrains.php.lang.PhpFileType
 
 import java.lang.Exception
+import java.nio.file.Path
 
 class FileWriter(private val project: Project) : FileWriterInterface {
     @Throws(Exception::class)
@@ -52,7 +55,10 @@ class FileWriter(private val project: Project) : FileWriterInterface {
     }
 
     private fun getPsiDirectory(): PsiDirectory? {
-        val baseDir = this.project.baseDir
+        val basePath: String? = this.project.basePath
+
+        val baseDir = PlatformVirtualFileManager.getInstance().findFileByNioPath(basePath)
+
         return PsiManager.getInstance(this.project).findDirectory(baseDir)
     }
 }

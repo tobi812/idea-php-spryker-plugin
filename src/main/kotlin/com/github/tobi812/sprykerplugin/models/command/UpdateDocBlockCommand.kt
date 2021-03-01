@@ -16,7 +16,6 @@ class UpdateDocBlockCommand(
     private val docBlockGenerator: DocBlockGeneratorInterface,
     private val phpRenderer: PhpClassRendererInterface
 ) {
-
     @Throws(Exception::class)
     fun updateDocBlock(phpClass: PhpClass, project: Project) {
         val fqClassName = phpClass.fqn

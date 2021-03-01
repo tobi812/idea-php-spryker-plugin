@@ -1,26 +1,24 @@
 package com.github.tobi812.sprykerplugin.config
 
+import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import java.util.*
 
-//@State(
-//        name="SprykerPluginConfig",
-//        storages = {
-//                @Storage("SprykerPluginConfig.xml")}
-//)
-class SprykerPluginConfig //implements PersistentStateComponent<SprykerPluginConfig>
+@State(name = "SprykerPluginConfig", storages = [Storage("SprykerPluginConfig.xml")])
+class SprykerPluginConfig: PersistentStateComponent<SprykerPluginConfig>
 {
     var projectName = "Pyz"
     var basePath = "src"
 
-    //    @Override
-    val state: SprykerPluginConfig?
-        get() = this
+    override fun getState(): SprykerPluginConfig {
+        return this
+    }
 
-    //    @Override
-    fun loadState(config: SprykerPluginConfig?) {
+    override fun loadState(config: SprykerPluginConfig) {
         XmlSerializerUtil.copyBean(config, this)
     }
 

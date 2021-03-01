@@ -2,14 +2,12 @@ package com.github.tobi812.sprykerplugin.models.manager
 
 import com.github.tobi812.sprykerplugin.actions.ClassConfig
 import com.github.tobi812.sprykerplugin.models.generator.ClassGeneratorInterface
-import com.github.tobi812.sprykerplugin.models.generator.ParentGeneratorInterface
 import com.github.tobi812.sprykerplugin.models.renderer.PhpClassRendererInterface
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
 import com.github.tobi812.sprykerplugin.models.resolver.PathResolverInterface
 import com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface
 import com.intellij.psi.PsiElement
 import java.lang.Exception
-import java.util.HashMap
 
 class ClassManager(
     private val classGenerator: ClassGeneratorInterface,
