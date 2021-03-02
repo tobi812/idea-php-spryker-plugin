@@ -25,22 +25,14 @@ class SprykerPluginConfig: PersistentStateComponent<SprykerPluginConfig>
     val coreNames: Array<String>
         get() = Companion.coreNames
 
+    val appNames: Array<String>
+        get() = Companion.appNames
+
     companion object {
         private var coreNames = arrayOf("Pyz", "Spryker")
+        private var appNames = arrayOf("Yves", "Zed", "Client", "Glue")
 
-        fun getInstance(project: Project, projectName: String): SprykerPluginConfig {
-            val slicedCoreNames = ArrayList<String>()
-            var matched = false
-            for (coreName in coreNames) {
-                if (coreName == projectName) {
-                    matched = true
-                }
-                if (matched) {
-                    slicedCoreNames.add(coreName)
-                }
-            }
-            coreNames = slicedCoreNames.toTypedArray()
-
+        fun getInstance(project: Project): SprykerPluginConfig {
             return ServiceManager.getService(project, SprykerPluginConfig::class.java)
         }
     }

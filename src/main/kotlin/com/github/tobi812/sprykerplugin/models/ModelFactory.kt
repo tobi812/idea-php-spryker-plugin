@@ -15,8 +15,6 @@ import com.github.tobi812.sprykerplugin.models.renderer.PhpClassRenderer
 import com.github.tobi812.sprykerplugin.models.renderer.PhpClassRendererInterface
 import com.github.tobi812.sprykerplugin.models.resolver.ClassResolver
 import com.github.tobi812.sprykerplugin.models.resolver.ClassResolverInterface
-import com.github.tobi812.sprykerplugin.models.resolver.PathResolver
-import com.github.tobi812.sprykerplugin.models.resolver.PathResolverInterface
 import com.github.tobi812.sprykerplugin.models.writer.FileWriter
 import com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface
 import com.intellij.openapi.project.Project
@@ -32,7 +30,6 @@ class ModelFactory {
         return ClassManager(
                 this.createClassGenerator(project, projectName),
                 this.createClassRenderer(),
-                this.createPathResolver(project, projectName),
                 this.createFileWriter(project)
         )
     }
