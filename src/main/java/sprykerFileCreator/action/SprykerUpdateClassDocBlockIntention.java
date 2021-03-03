@@ -11,11 +11,6 @@ import com.intellij.util.IncorrectOperationException;
 import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
-import pav.sprykerFileCreator.config.SprykerPluginConfig;
-import pav.sprykerFileCreator.model.ModelFactory;
-import pav.sprykerFileCreator.model.command.UpdateDocBlockCommand;
-import pav.sprykerFileCreator.model.definition.ClassDefinitionInterface;
-import pav.sprykerFileCreator.model.matcher.ClassTypeMatcherInterface;
 
 public class SprykerUpdateClassDocBlockIntention extends PsiElementBaseIntentionAction {
 

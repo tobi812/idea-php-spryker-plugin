@@ -7,4 +7,7 @@ import java.lang.Exception
 interface FileWriterInterface {
     @Throws(Exception::class)
     fun writeFile(fileDirectory: PsiDirectory, fileName: String, phpClassContent: String): PsiElement
+
+    @Throws(Exception::class)
+    fun createSubdirectory(fileDirectory: PsiDirectory, subDirectoryName: String): PsiDirectory?
 }

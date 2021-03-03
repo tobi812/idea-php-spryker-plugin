@@ -50,10 +50,14 @@ class ModelFactory {
         return DefinitionProvider()
     }
 
+    fun createFileWriter(project: Project): FileWriterInterface {
+        return FileWriter(project)
+    }
+
     private fun createClassResolver(project: Project, projectName: String): ClassResolverInterface {
         return ClassResolver(
-            this.getConfig(project, projectName).projectName,
-            this.getConfig(project, projectName).coreNames,
+            this.getConfig(project).projectName,
+            this.getConfig(project).coreNames,
             this.createClassFinder(project),
             this.definitionProvider
         )
@@ -75,14 +79,6 @@ class ModelFactory {
         return PhpClassRenderer()
     }
 
-    private fun createPathResolver(project: Project, projectName: String): PathResolverInterface {
-        return PathResolver(getConfig(project, projectName).basePath)
-    }
-
-    private fun createFileWriter(project: Project): FileWriterInterface {
-        return FileWriter(project)
-    }
-
     private fun createParentGenerator(project: Project, projectName: String): ParentGeneratorInterface {
         return ParentGenerator(
                 this.createClassResolver(project, projectName),
@@ -97,7 +93,7 @@ class ModelFactory {
         )
     }
 
-    private fun getConfig(project: Project, projectName: String): SprykerPluginConfig {
-        return SprykerPluginConfig.getInstance(project, projectName)
+    private fun getConfig(project: Project): SprykerPluginConfig {
+        return SprykerPluginConfig.getInstance(project)
     }
 }

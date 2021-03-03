@@ -11,6 +11,12 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyProjectService"/>
+
+        <intentionAction>
+            <className>com.github.tobi812.sprykerplugin.actions.SprykerUpdateClassDocBlockAction</className>
+            <category>PHP</category>
+            <descriptionDirectoryName>SprykerUpdateClassDocBlockIntention</descriptionDirectoryName>
+        </intentionAction>
     </extensions>
 
     <applicationListeners>
@@ -19,11 +25,90 @@
     </applicationListeners>
 
     <actions>
-        <action id="SprykerUpdateClassDocBlockAction"
-                class="pav.sprykerFileCreator.action.SprykerUpdateClassDocBlockAction"
-                text="SprykerUpdateClassDocBlockAction" description="Update Spryker class docBlock">
-            <add-to-group group-id="CodeMenu" anchor="first"/>
-<!--            <keyboard-shortcut keymap="$default" first-keystroke="shift alt U"/>-->
+        <action id="SprykerCreateYvesController" class="com.github.tobi812.sprykerplugin.actions.create.YvesControllerCreateAction"
+                text="Create Yves Controller" description="Create Yves Controller">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateYvesFactory" class="com.github.tobi812.sprykerplugin.actions.create.YvesFactoryCreateAction"
+                text="Create Yves Factory" description="Create Yves Factory">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateYvesDependencyProvider" class="com.github.tobi812.sprykerplugin.actions.create.YvesDependencyProviderCreateAction"
+                text="Create Yves DependencyProvider" description="Create Yves DependencyProvider">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateYvesPlugin" class="com.github.tobi812.sprykerplugin.actions.create.YvesPluginCreateAction"
+                text="Create YvesPlugin" description="Create YvesPlugin">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateClient" class="com.github.tobi812.sprykerplugin.actions.create.ClientCreateAction"
+                text="Create Client" description="Create Client">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateClientDependencyProvider" class="com.github.tobi812.sprykerplugin.actions.create.ClientDependencyProviderCreateAction"
+                text="Create ClientDependencyProvider" description="Create ClientDependencyProvider">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateClientFactory" class="com.github.tobi812.sprykerplugin.actions.create.ClientFactoryCreateAction"
+                text="Create ClientFactory" description="Create ClientFactory">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateClientPlugin" class="com.github.tobi812.sprykerplugin.actions.create.ClientPluginCreateAction"
+                text="Create ClientPlugin" description="Create ClientPlugin">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedBusinessFactory" class="com.github.tobi812.sprykerplugin.actions.create.ZedBusinessFactoryCreateAction"
+                text="Create Zed Business Factory" description="Create Zed Business Factory">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedCommunicationFactory" class="com.github.tobi812.sprykerplugin.actions.create.ZedCommunicationFactoryCreateAction"
+                text="Create Zed Communication Factory" description="Create Zed Communication Factory">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedConfig" class="com.github.tobi812.sprykerplugin.actions.create.ZedConfigCreateAction"
+                text="Create Zed Config" description="Create Zed Config">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedController" class="com.github.tobi812.sprykerplugin.actions.create.ZedControllerCreateAction"
+                text="Create Zed Controller" description="Create Zed Controller">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedDependencyProvider" class="com.github.tobi812.sprykerplugin.actions.create.ZedDependencyProviderCreateAction"
+                text="Create Zed DependencyProvider" description="Create Zed DependencyProvider">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedFacade" class="com.github.tobi812.sprykerplugin.actions.create.ZedFacadeCreateAction"
+                text="Create Zed Facade" description="Create Zed Facade">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+        <action id="SprykerCreateZedPersistenceFactory" class="com.github.tobi812.sprykerplugin.actions.create.ZedPersistenceFactoryCreateAction"
+                text="Create Zed Persistence Factory" description="Create Zed Persistence Factory">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+
+        <action id="SprykerCreateZedPlugin" class="com.github.tobi812.sprykerplugin.actions.create.ZedPluginCreateAction"
+                text="Create Zed Plugin" description="Create Zed Plugin">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+
+        <action id="SprykerCreateZedQueryContainer" class="com.github.tobi812.sprykerplugin.actions.create.ZedQueryContainerCreateAction"
+                text="Create Zed QueryContainer" description="Create Zed QueryContainer">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+
+        <action id="SprykerCreateClientBundle" class="com.github.tobi812.sprykerplugin.actions.create.ClientBundleAction"
+                text="Create Client Bundle" description="Create Client Bundle">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+
+        <action id="SprykerCreateZedBundle" class="com.github.tobi812.sprykerplugin.actions.create.ZedBundleAction"
+                text="Create Zed Bundle" description="Create Zed Bundle">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+
+        <action id="SprykerCreateYvesBundle" class="com.github.tobi812.sprykerplugin.actions.create.YvesBundleCreateAction"
+                text="Create Yves Bundle" description="Create Yves Bundle">
+            <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
     </actions>
 

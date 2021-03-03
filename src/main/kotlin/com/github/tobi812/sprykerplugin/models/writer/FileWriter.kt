@@ -21,7 +21,6 @@ class FileWriter(private val project: Project) : FileWriterInterface {
             .getInstance(project)
             .createFileFromText("$fileName.php", PhpFileType.INSTANCE, phpClassContent)
 
-
         WriteCommandAction.writeCommandAction(this.project, file)
             .withGroupId("Create Command")
             .run<Throwable> {
@@ -30,8 +29,19 @@ class FileWriter(private val project: Project) : FileWriterInterface {
                 if (virtualFile != null) {
                     OpenFileDescriptor(project, virtualFile.virtualFile).navigate(true)
                 }
-        }
+            }
 
         return file
+    }
+
+    @Throws(Exception::class)
+    override fun createSubdirectory(fileDirectory: PsiDirectory, subDirectoryName: String): PsiDirectory? {
+        WriteCommandAction.writeCommandAction(this.project)
+            .withGroupId("Create Command")
+            .run<Throwable> {
+                fileDirectory.createSubdirectory(subDirectoryName)
+            }
+
+        return fileDirectory.findSubdirectory(subDirectoryName)
     }
 }
