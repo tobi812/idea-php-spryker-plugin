@@ -5,29 +5,30 @@ import com.github.tobi812.sprykerplugin.constants.SprykerConstants
 import com.intellij.psi.PsiDirectory
 import java.util.ArrayList
 
-class YvesCreateModuleAction private constructor() :
+class ClientCreateModuleAction private constructor() :
     AbstractCreateModuleAction(
-        "Create Yves Bundle",
-        "Create Yves Bundle",
+        "Create Client Module",
+        "Create Client Module",
         SprykerIcons.SPRYKER_ICON
     ) {
 
     override fun getErrorTitle(): String {
-        return "Creating Yves Module Failed!"
+        return "Creating Client Module Failed!"
     }
 
     override fun getActionName(psiDirectory: PsiDirectory, s: String): String {
-        return "Create Yves Bundle"
+        return "Create Client Bundle"
     }
 
     override val applicationName: String
-        get() = "Yves"
+        get() = "Client"
 
     override val classTypes: ArrayList<String>
         get() {
             val classTypes = ArrayList<String>()
-            classTypes.add(SprykerConstants.YVES_FACTORY)
-            classTypes.add(SprykerConstants.YVES_DEPENDENCY_PROVIDER)
+            classTypes.add(SprykerConstants.CLIENT_DEPENDENCY_PROVIDER)
+            classTypes.add(SprykerConstants.CLIENT_FACTORY)
+            classTypes.add(SprykerConstants.CLIENT)
 
             return classTypes
         }

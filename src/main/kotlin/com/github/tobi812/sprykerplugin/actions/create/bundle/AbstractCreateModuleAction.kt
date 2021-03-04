@@ -14,7 +14,6 @@ import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.InputValidator
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.ui.NonEmptyInputValidator
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import java.lang.Exception
@@ -52,25 +51,23 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
             return
         }
 
+        elementsConsumer.accept(validator.createdElements)
+    }
+
+    @Throws(Exception::class)
+    override fun create(newName: String, directory: PsiDirectory): Array<PsiElement> {
+        val moduleName: String = newName
         if (directory.findSubdirectory(moduleName) != null) {
-            Messages.showErrorDialog(project, "Module $moduleName already exists!", "Error")
+            Messages.showErrorDialog(this.getProject(), "Module $moduleName already exists!", "Error")
 
-            return
-        }
-        if (moduleName != null) {
-            elementsConsumer.accept(validator.createdElements)
+            return PsiElement.EMPTY_ARRAY
         }
 
-        try {
-            val moduleDirectory: PsiDirectory = this.createSubdirectory(directory, moduleName)
-            val projectName = this.matchProjectName(directory)
-            val classConfig = ClassConfig(moduleName, projectName)
+        val moduleDirectory: PsiDirectory = this.createSubdirectory(directory, moduleName)
+        val projectName = this.matchProjectName(directory)
+        val classConfig = ClassConfig(moduleName, projectName)
 
-            this.createModuleClasses(project, moduleDirectory, classConfig)
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-            Messages.showErrorDialog(project, "Error:" + exception.message, "Error")
-        }
+        return this.createModuleClasses(this.getProject(), moduleDirectory, classConfig)
     }
 
     @Throws(Exception::class)
@@ -85,17 +82,19 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         project: Project,
         moduleDirectory: PsiDirectory,
         classConfig: ClassConfig
-    ) {
+    ): Array<PsiElement> {
         val projectName = classConfig.projectName
         val classManager: ClassManagerInterface = this.modelFactory.createClassManager(project, projectName)
         val definitionProvider: DefinitionProviderInterface = this.modelFactory.createDefinitionProvider()
-
+        val createdElements: Array<PsiElement> = PsiElement.EMPTY_ARRAY
         for (classType in this.classTypes) {
             val classDefinition: ClassDefinitionInterface = definitionProvider.getDefinitionByType(classType)
             val classDirectory: PsiDirectory = this.resolveClassDirectory(classDefinition, moduleDirectory)
 
-            classManager.handleClass(classDirectory, classType, classConfig)
+            createdElements[createdElements.size] = classManager.handleClass(classDirectory, classType, classConfig)
         }
+
+        return createdElements
     }
 
     @Throws(Exception::class)
@@ -127,7 +126,7 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         val view: IdeView = LangDataKeys.IDE_VIEW.getData(dataContext) as IdeView
         val dir: PsiDirectory = view.orChooseDirectory ?: return false
 
-        if (dir.name != applicationName) {
+        if (dir.name != this.applicationName) {
             return false
         }
 
@@ -139,26 +138,22 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
 
     @Throws(Exception::class)
     protected fun createSubdirectory(fileDirectory: PsiDirectory, subDirectoryName: String): PsiDirectory {
-        val subDirectory: PsiDirectory = this.modelFactory
+        return this.modelFactory
             .createFileWriter(this.getProject())
             .createSubdirectory(fileDirectory, subDirectoryName) ?: throw Exception()
-
-        return subDirectory
     }
 
-    protected fun getProject(): Project {
-        val project: Project = this.project ?: throw Exception()
-
-        return project
+    private fun getProject(): Project {
+        return this.project ?: throw Exception()
     }
 
     protected open inner class MyInputValidator(project: Project?, val directory: PsiDirectory) :
-        ElementCreator(project, this.getErrorTitle()), InputValidator {
-        var createdElements = PsiElement.EMPTY_ARRAY
+        ElementCreator(project, this.errorTitle), InputValidator {
+        var createdElements: Array<PsiElement?> = PsiElement.EMPTY_ARRAY
             private set
 
         override fun checkInput(inputString: String): Boolean {
-            return !inputString.isEmpty()
+            return inputString.isNotEmpty()
         }
 
         @Throws(Exception::class)
@@ -177,7 +172,7 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         override fun canClose(inputString: String): Boolean {
             this.createdElements = this.tryCreate(inputString)
 
-            return this.checkInput(inputString) && createdElements.size > 0
+            return this.checkInput(inputString) && this.createdElements.isNotEmpty()
         }
     }
 }
