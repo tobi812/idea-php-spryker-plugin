@@ -18,7 +18,7 @@ object SprykerConstants {
     const val CLIENT_PLUGIN = "client_plugin"
     const val CLIENT_FACTORY = "client_factory"
     const val CLIENT_DEPENDENCY_PROVIDER = "client_dependency_provider"
-    const val BUNDLE_NAME_PLACEHOLDER = "{{ bundleName }}"
+    const val MODULE_NAME_PLACEHOLDER = "{{ bundleName }}"
     const val PROJECT_NAME_PLACEHOLDER = "{{ projectName }}"
     const val CLASS_NAME_PLACEHOLDER = "{{ className }}"
 }

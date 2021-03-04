@@ -88,7 +88,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
     @Throws(Exception::class)
     override fun matchBundleName(classType: String, psiDirectory: PsiDirectory): String {
         val namespacePattern: String = this.definitionProvider.getDefinitionByType(classType).namespacePattern
-        val bundlePosition = this.getPlaceholderPosition(namespacePattern, SprykerConstants.BUNDLE_NAME_PLACEHOLDER)
+        val bundlePosition = this.getPlaceholderPosition(namespacePattern, SprykerConstants.MODULE_NAME_PLACEHOLDER)
         var currentDirectory: PsiDirectory = psiDirectory
         for (i in 1 until bundlePosition) {
             if (currentDirectory.parent is PsiDirectory) {
@@ -103,7 +103,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
 
     override fun matchBundleNameFromFQName(classDefinition: ClassDefinitionInterface, fqName: String): String {
         val namespacePattern: String = classDefinition.namespacePattern
-        val bundlePosition = this.getPlaceholderPosition(namespacePattern, SprykerConstants.BUNDLE_NAME_PLACEHOLDER)
+        val bundlePosition = this.getPlaceholderPosition(namespacePattern, SprykerConstants.MODULE_NAME_PLACEHOLDER)
         val nameSegments = fqName.split("\\\\".toRegex()).toTypedArray()
         ArrayUtils.reverse(nameSegments)
         var bundleName = ""
@@ -138,7 +138,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
 
     private fun getNamePattern(classDefinition: ClassDefinitionInterface, trim: Boolean): String {
         var namePattern: String = classDefinition.namePattern
-        namePattern = namePattern.replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, WILDCARD)
+        namePattern = namePattern.replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, WILDCARD)
         namePattern = namePattern.replace(SprykerConstants.CLASS_NAME_PLACEHOLDER, WILDCARD)
         namePattern = namePattern.replace("\\", "\\\\")
 
@@ -156,7 +156,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
         trim: Boolean
     ): String {
         var namespacePattern: String = classDefinition.namespacePattern
-        namespacePattern = namespacePattern.replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
+        namespacePattern = namespacePattern.replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)
         namespacePattern = namespacePattern.replace(SprykerConstants.PROJECT_NAME_PLACEHOLDER, WILDCARD)
         namespacePattern = namespacePattern.replace("\\", "\\\\")
 

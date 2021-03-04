@@ -83,7 +83,7 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
                 .createDefinitionProvider()
                 .getDefinitionByType(classType)
             val className: String = classDefinition.namePattern
-                .replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
+                .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)
 
             directory.findFile("$className.php") == null
         } catch (exception: Exception) {

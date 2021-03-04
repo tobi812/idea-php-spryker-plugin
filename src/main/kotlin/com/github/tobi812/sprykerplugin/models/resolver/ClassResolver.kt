@@ -21,7 +21,7 @@ class ClassResolver(
             classDefinition.namespacePattern + "\\" + classDefinition.namePattern
         val fullQualifiedName: String = classPattern
             .replace(SprykerConstants.PROJECT_NAME_PLACEHOLDER, projectName)
-            .replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
+            .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)
 
         return resolveClass(fullQualifiedName, findClassBelow = false, findInterface = true)
     }

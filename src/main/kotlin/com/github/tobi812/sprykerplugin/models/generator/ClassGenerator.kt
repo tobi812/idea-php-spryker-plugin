@@ -30,20 +30,20 @@ class ClassGenerator(
 
     private fun createNamespace(classDefinition: ClassDefinitionInterface, config: ClassConfig): String {
         val projectName = config.projectName
-        val bundleName = config.bundleName
+        val bundleName = config.moduleName
 
         return classDefinition.namespacePattern
             .replace(SprykerConstants.PROJECT_NAME_PLACEHOLDER, projectName)
-            .replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
+            .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)
     }
 
     private fun createClassName(classDefinition: ClassDefinitionInterface, config: ClassConfig): String {
-        val bundleName: String = config.bundleName
+        val bundleName: String = config.moduleName
         val className: String = config.name ?: "Index"
 
         return classDefinition.namePattern
             .replace(SprykerConstants.CLASS_NAME_PLACEHOLDER, className)
-            .replace(SprykerConstants.BUNDLE_NAME_PLACEHOLDER, bundleName)
+            .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)
     }
 
     private fun addParentClass(phpClass: PhpClassInterface, classDefinition: ClassDefinitionInterface) {
@@ -59,7 +59,7 @@ class ClassGenerator(
         classDefinition: ClassDefinitionInterface,
         config: ClassConfig
     ) {
-        val bundleName: String = config.bundleName
+        val bundleName: String = config.moduleName
         val docBlockClassTypes: Array<String> = classDefinition.docBlockClasses
         val docBlockItems: List<DocBlockItem> = this.docBlockGenerator.getDocBlockItems(docBlockClassTypes, bundleName)
 
