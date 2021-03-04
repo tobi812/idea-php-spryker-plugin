@@ -8,9 +8,11 @@ import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInt
 import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
 import com.intellij.ide.IdeView
 import com.intellij.ide.actions.CreateElementActionBase
+import com.intellij.ide.actions.ElementCreator
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.InputValidator
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.NonEmptyInputValidator
 import com.intellij.psi.PsiDirectory
@@ -29,29 +31,34 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
     private var project: Project? = null
     abstract val applicationName: String
     abstract val classTypes: ArrayList<String>
+    abstract override fun getErrorTitle(): String
 
     override fun invokeDialog(
         project: Project,
         directory: PsiDirectory,
-        elementsConsumer: Consumer<Array<PsiElement>>
+        elementsConsumer: Consumer<Array<PsiElement?>>
     ) {
+        this.project = project
+        val validator = MyInputValidator(project, directory)
         val moduleName = Messages.showInputDialog(
             "Set module name",
             "Input module name",
             Messages.getQuestionIcon(),
             "",
-            NonEmptyInputValidator()
+            validator
         )
 
         if (moduleName == "" || moduleName == null) {
             return
         }
 
-        this.project = project
         if (directory.findSubdirectory(moduleName) != null) {
             Messages.showErrorDialog(project, "Module $moduleName already exists!", "Error")
 
             return
+        }
+        if (moduleName != null) {
+            elementsConsumer.accept(validator.createdElements)
         }
 
         try {
@@ -143,5 +150,34 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         val project: Project = this.project ?: throw Exception()
 
         return project
+    }
+
+    protected open inner class MyInputValidator(project: Project?, val directory: PsiDirectory) :
+        ElementCreator(project, this.getErrorTitle()), InputValidator {
+        var createdElements = PsiElement.EMPTY_ARRAY
+            private set
+
+        override fun checkInput(inputString: String): Boolean {
+            return !inputString.isEmpty()
+        }
+
+        @Throws(Exception::class)
+        public override fun create(newName: String): Array<PsiElement> {
+            return this@AbstractCreateModuleAction.create(newName, directory)
+        }
+
+        override fun startInWriteAction(): Boolean {
+            return this@AbstractCreateModuleAction.startInWriteAction()
+        }
+
+        public override fun getActionName(newName: String): String {
+            return this@AbstractCreateModuleAction.getActionName(directory, newName)!!
+        }
+
+        override fun canClose(inputString: String): Boolean {
+            this.createdElements = this.tryCreate(inputString)
+
+            return this.checkInput(inputString) && createdElements.size > 0
+        }
     }
 }
