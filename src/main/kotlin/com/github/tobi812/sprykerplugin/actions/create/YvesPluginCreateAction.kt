@@ -15,19 +15,8 @@ class YvesPluginCreateAction :
     override val actionName =  "Create Yves Plugin"
     override val classType: String = SprykerConstants.YVES_PLUGIN
 
-    override fun invokeDialog(project: Project, psiDirectory: PsiDirectory): Array<PsiElement?> {
-        val controllerName = Messages.showInputDialog(
-            "Set Plugin Name",
-            "Input Plugin Name",
-            Messages.getQuestionIcon(),
-            "",
-            NonEmptyInputValidator()
-        )
-
-        if (StringUtils.isBlank(controllerName)) {
-            return arrayOfNulls(1)
-        }
-
-        return this.createClassType(project, psiDirectory, controllerName)
+    init {
+        this.inputMessage = "Set Plugin Name"
+        this.inputTitle = "Set Plugin Name"
     }
 }

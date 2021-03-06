@@ -13,47 +13,70 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import java.lang.Exception
+import java.util.function.Consumer
 import javax.swing.Icon
 
 abstract class AbstractCreateClassTypeAction protected constructor(text: String, description: String, icon: Icon?) :
     CreateElementActionBase(text, description, icon) {
-
     private val modelFactory: ModelFactory = ModelFactory()
+    private var project: Project? = null
     protected abstract val classType: String
     protected abstract val actionName: String
+    protected var inputMessage: String = ""
+    protected var inputTitle: String = ""
+    protected var initalValue: String = ""
 
-    override fun invokeDialog(project: Project, psiDirectory: PsiDirectory): Array<PsiElement?> {
-        return this.createClassType(project, psiDirectory)
+    override fun invokeDialog(
+        project: Project,
+        directory: PsiDirectory,
+        elementsConsumer: Consumer<Array<PsiElement?>>
+    ) {
+        this.project = project
+
+        if (this.inputMessage == "" && this.inputTitle == "") {
+            this.create("", directory)
+        }
+
+        val validator = MyInputValidator(project, directory)
+        val moduleName = Messages.showInputDialog(
+            this.inputMessage,
+            this.inputTitle,
+            Messages.getQuestionIcon(),
+            this.initalValue,
+            validator
+        )
+
+        if (moduleName == "" || moduleName == null) {
+            return
+        }
+
+        elementsConsumer.accept(validator.createdElements)
+    }
+
+    private fun getProject(): Project {
+        return this.project ?: throw Exception()
     }
 
     @Throws(Exception::class)
-    override fun create(s: String, psiDirectory: PsiDirectory): Array<PsiElement?> {
-        return arrayOfNulls<PsiElement>(1)
+    override fun create(newName: String, directory: PsiDirectory): Array<PsiElement> {
+        return this.createClassType(newName, directory)
     }
 
     protected open fun createClassType(
-        project: Project,
-        psiDirectory: PsiDirectory,
-        className: String? = null
-    ): Array<PsiElement?> {
+        className: String,
+        psiDirectory: PsiDirectory
+    ): Array<PsiElement> {
         val classType: String = this.classType
-        val psiElements = arrayOfNulls<PsiElement>(1)
 
-        try {
-            val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.createClassTypeMatcher()
-            val bundleName: String = classTypeMatcher.matchBundleName(classType, psiDirectory)
-            val projectName: String = classTypeMatcher.matchProjectName(classType, psiDirectory)
-            val classConfig = ClassConfig(bundleName, projectName, className)
-            val classManager: ClassManagerInterface = this.modelFactory.createClassManager(project, projectName)
+        val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.createClassTypeMatcher()
+        val bundleName: String = classTypeMatcher.matchBundleName(classType, psiDirectory)
+        val projectName: String = classTypeMatcher.matchProjectName(classType, psiDirectory)
+        val classConfig = ClassConfig(bundleName, projectName, className)
+        val classManager: ClassManagerInterface = this.modelFactory.createClassManager(this.getProject(), projectName)
 
-            val psiElement = classManager.handleClass(psiDirectory, classType, classConfig)
-            psiElements[0] = psiElement
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-            Messages.showErrorDialog(project, "Error:" + exception.message, "Error")
-        }
+        val psiElement = classManager.handleClass(psiDirectory, classType, classConfig)
 
-        return psiElements
+        return arrayOf(psiElement)
     }
 
     override fun isAvailable(dataContext: DataContext): Boolean {
