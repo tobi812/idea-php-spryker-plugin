@@ -2,9 +2,13 @@ package com.github.tobi812.sprykerplugin.models.renderer
 
 import com.github.tobi812.sprykerplugin.models.renderer.dto.DocBlockItem
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
+import com.github.tobi812.sprykerplugin.models.renderer.dto.UseBlockItem
 import com.intellij.openapi.util.io.StreamUtil
 import com.intellij.openapi.util.text.StringUtil
 import java.io.IOException
+import java.io.InputStreamReader
+import java.io.Reader
+import java.nio.charset.StandardCharsets.UTF_8
 
 class PhpClassRenderer : PhpClassRendererInterface {
     companion object {
@@ -15,7 +19,7 @@ class PhpClassRenderer : PhpClassRendererInterface {
         private const val PARENT_CLASS = "{{ parentClass }}"
         private const val INTERFACE_BLOCK = "{{ interfaceBlock }}"
         private const val METHOD_BLOCK = "{{ methodBlock }}"
-        private const val TEMPLATE_PATH = "template/PhpClassTemplate.php"
+        private const val TEMPLATE_PATH = "template/PhpClassTemplate.php.template"
     }
 
     override fun renderPhpClass(phpClass: PhpClassInterface): String {
@@ -42,9 +46,9 @@ class PhpClassRenderer : PhpClassRendererInterface {
         var docBlock = "/**\n"
         for (docBlockItem in docBlockItems) {
             val docBlockElements = arrayOf<String>(
-                docBlockItem.getTag(),
-                docBlockItem.getReturnType(),
-                docBlockItem.getValue()
+                docBlockItem.tag,
+                docBlockItem.returnType,
+                docBlockItem.value
             )
             docBlock += " * @${StringUtil.join(docBlockElements, " ")}\n"
         }
@@ -55,15 +59,15 @@ class PhpClassRenderer : PhpClassRendererInterface {
     }
 
     private fun renderUseBlock(phpClass: PhpClassInterface): String {
-        val useBlockItems: List<UseBlockItem> = phpClass.getUseBlockItems()
+        val useBlockItems: List<UseBlockItem> = phpClass.useBlockItems
         if (useBlockItems.size == 0) {
             return ""
         }
         var useBlock = ""
-        for (useItem in phpClass.getUseBlockItems()) {
-            useBlock += "use " + useItem.getFullQualifiedClassName()
-            if (useItem.getAlias() != null) {
-                useBlock += " as " + useItem.getAlias()
+        for (useItem in phpClass.useBlockItems) {
+            useBlock += "use " + useItem.fullQualifiedClassName
+            if (useItem.alias != null) {
+                useBlock += " as " + useItem.alias
             }
             useBlock += ";\n"
         }
@@ -75,11 +79,10 @@ class PhpClassRenderer : PhpClassRendererInterface {
 
     private fun renderParent(phpClass: PhpClassInterface): String {
         val parentClass: PhpClassInterface = phpClass.parentClass ?: return ""
-        var parentClassName: String = parentClass.getName()
+        var parentClassName: String = parentClass.name
 
-        if (!phpClass.getParentAlias().equals("")) {
-            parentClassName = phpClass.parentAlias
-        }
+        val parentAlias: String = phpClass.parentAlias as String
+        if (parentAlias.isNotBlank()) parentClassName = parentAlias
 
         return " extends $parentClassName"
     }
@@ -99,12 +102,10 @@ class PhpClassRenderer : PhpClassRendererInterface {
      */
     private fun readFile(path: String): String {
         var content = ""
-
+        val reader: Reader = InputStreamReader(PhpClassRenderer::class.java.getResourceAsStream(path), UTF_8)
         try {
-            content = StreamUtil.readText(
-                PhpClassRenderer::class.java.getResourceAsStream(path),
-                "UTF-8"
-            )
+
+            content = StreamUtil.readText(reader)
         } catch (e: IOException) {
             e.printStackTrace()
         }

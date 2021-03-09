@@ -6,7 +6,7 @@ import java.util.ArrayList
 class PhpClassItem(override val namespace: String, override val name: String) : PhpClassInterface {
     override var isAbstract: Boolean = false
     override var parentClass: PhpClassInterface? = null
-    override var parentAlias = ""
+    override var parentAlias: String? = ""
     override val useBlockItems: MutableList<UseBlockItem>
     override val docBlockItems: MutableList<DocBlockItem>
 

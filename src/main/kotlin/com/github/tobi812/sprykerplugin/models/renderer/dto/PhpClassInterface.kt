@@ -5,7 +5,7 @@ interface PhpClassInterface : PhpFileInterface {
     fun setAbstract(): PhpClassInterface
 
     var parentClass: PhpClassInterface?
-    val parentAlias: String?
+    var parentAlias: String?
     fun setParentClass(parentClass: PhpClassInterface): PhpClassInterface
     fun setParentClass(parentClass: PhpClassInterface, aliasPrefix: String): PhpClassInterface
 

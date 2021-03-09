@@ -19,7 +19,7 @@ public class PhpClassRenderer implements PhpClassRendererInterface {
     private static final String PARENT_CLASS = "{{ parentClass }}";
     private static final String INTERFACE_BLOCK = "{{ interfaceBlock }}";
     private static final String METHOD_BLOCK = "{{ methodBlock }}";
-    private static final String TEMPLATE_PATH = "template/PhpClassTemplate.php";
+    private static final String TEMPLATE_PATH = "template/PhpClassTemplate.php.template";
 
 
     @Override
