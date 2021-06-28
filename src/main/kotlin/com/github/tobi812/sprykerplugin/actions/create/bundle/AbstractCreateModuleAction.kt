@@ -85,7 +85,7 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
     ): Array<PsiElement> {
         val projectName = classConfig.projectName
         val classManager: ClassManagerInterface = this.modelFactory.createClassManager(project, projectName)
-        val definitionProvider: DefinitionProviderInterface = this.modelFactory.createDefinitionProvider()
+        val definitionProvider: DefinitionProviderInterface = this.modelFactory.definitionProvider
         val createdElements: Array<PsiElement> = PsiElement.EMPTY_ARRAY
         for (classType in this.classTypes) {
             val classDefinition: ClassDefinitionInterface = definitionProvider.getDefinitionByType(classType)

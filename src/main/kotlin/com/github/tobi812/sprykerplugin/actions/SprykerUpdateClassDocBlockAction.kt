@@ -22,7 +22,7 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
         CommandProcessor.getInstance().executeCommand(project, {
             ApplicationManager.getApplication().runWriteAction {
                 val modelFactory = ModelFactory()
-                val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.createClassTypeMatcher()
+                val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.classTypeMatcher
                 val projectName: String = classTypeMatcher.matchProjectName(phpClass.fqn)
                 val command: UpdateDocBlockCommand = modelFactory.createUpdateDocBlockCommand(project, projectName)
 
@@ -38,7 +38,7 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
     override fun isAvailable(project: Project, editor: Editor, psiElement: PsiElement): Boolean {
         val phpClass = PhpPsiUtil.getParentByCondition<PhpClass>(psiElement, PhpClass.INSTANCEOF) ?: return false
         val modelFactory = ModelFactory()
-        val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.createClassTypeMatcher()
+        val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.classTypeMatcher
         val classDefinition: ClassDefinitionInterface? = classTypeMatcher.matchClassType(phpClass.fqn)
 
         return classDefinition != null

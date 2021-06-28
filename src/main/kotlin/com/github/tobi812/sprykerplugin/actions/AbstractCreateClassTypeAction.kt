@@ -68,7 +68,7 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
     ): Array<PsiElement> {
         val classType: String = this.classType
 
-        val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.createClassTypeMatcher()
+        val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.classTypeMatcher
         val bundleName: String = classTypeMatcher.matchBundleName(classType, psiDirectory)
         val projectName: String = classTypeMatcher.matchProjectName(classType, psiDirectory)
         val classConfig = ClassConfig(bundleName, projectName, className)
@@ -95,7 +95,7 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
     protected open fun classTypeMatchesDir(directory: PsiDirectory): Boolean {
         return try {
             val classType: String = this.classType
-            val classTypeMatcher = this.modelFactory.createClassTypeMatcher()
+            val classTypeMatcher = this.modelFactory.classTypeMatcher
 
             if (!classTypeMatcher.classTypeMatchesDir(classType, directory)) {
                 return false
@@ -103,7 +103,7 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
 
             val bundleName = classTypeMatcher.matchBundleName(classType, directory)
             val classDefinition: ClassDefinitionInterface = this.modelFactory
-                .createDefinitionProvider()
+                .definitionProvider
                 .getDefinitionByType(classType)
             val className: String = classDefinition.namePattern
                 .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)

@@ -20,10 +20,12 @@ import com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface
 import com.intellij.openapi.project.Project
 
 class ModelFactory {
-    private val definitionProvider: DefinitionProviderInterface
+    val definitionProvider: DefinitionProviderInterface
+    val classTypeMatcher: ClassTypeMatcherInterface
 
     init {
-        this.definitionProvider = createDefinitionProvider()
+        this.definitionProvider = DefinitionProvider()
+        this.classTypeMatcher = ClassTypeMatcher(this.definitionProvider)
     }
 
     fun createClassManager(project: Project, projectName: String): ClassManagerInterface {
@@ -34,20 +36,12 @@ class ModelFactory {
         )
     }
 
-    fun createClassTypeMatcher(): ClassTypeMatcherInterface {
-        return ClassTypeMatcher(definitionProvider)
-    }
-
     fun createUpdateDocBlockCommand(project: Project, projectName: String): UpdateDocBlockCommand {
         return UpdateDocBlockCommand(
-                this.createClassTypeMatcher(),
+                this.classTypeMatcher,
                 this.createDocBlockGenerator(project, projectName),
                 this.createClassRenderer()
         )
-    }
-
-    fun createDefinitionProvider(): DefinitionProviderInterface {
-        return DefinitionProvider()
     }
 
     fun createFileWriter(project: Project): FileWriterInterface {
@@ -55,9 +49,11 @@ class ModelFactory {
     }
 
     private fun createClassResolver(project: Project, projectName: String): ClassResolverInterface {
+        val config: SprykerPluginConfig = SprykerPluginConfig.getInstance(project)
+
         return ClassResolver(
-            this.getConfig(project).projectName,
-            this.getConfig(project).coreNames,
+            config.projectName,
+            config.coreNames,
             this.createClassFinder(project),
             this.definitionProvider
         )
@@ -71,7 +67,7 @@ class ModelFactory {
         return ClassGenerator(
                 this.createParentGenerator(project, projectName),
                 this.createDocBlockGenerator(project, projectName),
-                this.createDefinitionProvider()
+                this.definitionProvider
         )
     }
 
@@ -91,9 +87,5 @@ class ModelFactory {
                 this.createClassResolver(project, projectName),
                 this.definitionProvider
         )
-    }
-
-    private fun getConfig(project: Project): SprykerPluginConfig {
-        return SprykerPluginConfig.getInstance(project)
     }
 }
