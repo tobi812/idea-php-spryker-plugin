@@ -28,13 +28,20 @@ class ClassGenerator(
         return phpClass
     }
 
+    override fun createFullQualifiedName(classDefinition: ClassDefinitionInterface, config: ClassConfig): String {
+        val namespace: String = this.createNamespace(classDefinition, config)
+        val className: String = this.createClassName(classDefinition, config)
+
+        return namespace + "\\" + className
+    }
+
     private fun createNamespace(classDefinition: ClassDefinitionInterface, config: ClassConfig): String {
         val projectName = config.projectName
-        val bundleName = config.moduleName
+        val moduleName = config.moduleName
 
         return classDefinition.namespacePattern
             .replace(SprykerConstants.PROJECT_NAME_PLACEHOLDER, projectName)
-            .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)
+            .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, moduleName)
     }
 
     private fun createClassName(classDefinition: ClassDefinitionInterface, config: ClassConfig): String {

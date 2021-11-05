@@ -30,6 +30,12 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
         return null
     }
 
+    override fun isSprykerClass(fqClassName: String): Boolean {
+        val classDefinition = this.matchClassType(fqClassName)
+
+        return classDefinition != null
+    }
+
     @Throws(Exception::class)
     override fun classTypeMatchesDir(classType: String, directory: PsiDirectory): Boolean {
         val classDefinition: ClassDefinitionInterface = this.definitionProvider.getDefinitionByType(classType)

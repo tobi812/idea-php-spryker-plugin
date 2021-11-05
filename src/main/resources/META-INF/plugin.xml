@@ -9,14 +9,18 @@
     <depends>com.jetbrains.php</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyProjectService"/>
+        <!--<applicationService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyApplicationService"/> -->
+        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.config.SprykerPluginConfig"/>
+
 
         <intentionAction>
             <className>com.github.tobi812.sprykerplugin.actions.SprykerUpdateClassDocBlockAction</className>
             <category>PHP</category>
             <descriptionDirectoryName>SprykerUpdateClassDocBlockIntention</descriptionDirectoryName>
         </intentionAction>
+
+        <codeInsight.lineMarkerProvider
+                language="PHP" implementationClass="com.github.tobi812.sprykerplugin.linemarkerprovider.FactoryLineMarkerProvider"/>
     </extensions>
 
     <applicationListeners>
@@ -96,17 +100,17 @@
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
 
-        <action id="SprykerCreateClientBundle" class="com.github.tobi812.sprykerplugin.actions.create.ClientBundleAction"
+        <action id="SprykerCreateClientBundle" class="com.github.tobi812.sprykerplugin.actions.create.module.ClientCreateModuleAction"
                 text="Create Client Bundle" description="Create Client Bundle">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
 
-        <action id="SprykerCreateZedBundle" class="com.github.tobi812.sprykerplugin.actions.create.ZedBundleAction"
+        <action id="SprykerCreateZedBundle" class="com.github.tobi812.sprykerplugin.actions.create.module.ZedCreateModuleAction"
                 text="Create Zed Bundle" description="Create Zed Bundle">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
 
-        <action id="SprykerCreateYvesBundle" class="com.github.tobi812.sprykerplugin.actions.create.YvesBundleCreateAction"
+        <action id="SprykerCreateYvesBundle" class="com.github.tobi812.sprykerplugin.actions.create.module.YvesCreateModuleAction"
                 text="Create Yves Bundle" description="Create Yves Bundle">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>

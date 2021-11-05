@@ -1,4 +1,4 @@
-package com.github.tobi812.sprykerplugin.actions.create.bundle
+package com.github.tobi812.sprykerplugin.actions.create.module
 
 import com.github.tobi812.sprykerplugin.actions.ClassConfig
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
@@ -8,11 +8,9 @@ import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInt
 import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
 import com.intellij.ide.IdeView
 import com.intellij.ide.actions.CreateElementActionBase
-import com.intellij.ide.actions.ElementCreator
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.InputValidator
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
@@ -21,13 +19,12 @@ import java.util.*
 import java.util.function.Consumer
 import javax.swing.Icon
 
-// Refactor in this manner:
-// https://github.com/JetBrains/intellij-community/blob/19306e6d29182ef0d906e7f60054e0de11861da0/plugins/devkit/devkit-core/src/actions/NewMessageBundleAction.kt
 @Suppress("NAME_SHADOWING")
 abstract class AbstractCreateModuleAction protected constructor(text: String?, description: String?, icon: Icon?) :
     CreateElementActionBase(text, description, icon) {
     protected var modelFactory: ModelFactory = ModelFactory()
     private var project: Project? = null
+    protected abstract val actionName: String
     abstract val applicationName: String
     abstract val classTypes: ArrayList<String>
     abstract override fun getErrorTitle(): String
@@ -86,15 +83,16 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         val projectName = classConfig.projectName
         val classManager: ClassManagerInterface = this.modelFactory.createClassManager(project, projectName)
         val definitionProvider: DefinitionProviderInterface = this.modelFactory.definitionProvider
-        val createdElements: Array<PsiElement> = PsiElement.EMPTY_ARRAY
+        val createdElements: ArrayList<PsiElement> = ArrayList<PsiElement>()
+
         for (classType in this.classTypes) {
             val classDefinition: ClassDefinitionInterface = definitionProvider.getDefinitionByType(classType)
             val classDirectory: PsiDirectory = this.resolveClassDirectory(classDefinition, moduleDirectory)
 
-            createdElements[createdElements.size] = classManager.handleClass(classDirectory, classType, classConfig)
+            createdElements.add(classManager.handleClass(classDirectory, classType, classConfig))
         }
 
-        return createdElements
+        return createdElements.toTypedArray()
     }
 
     @Throws(Exception::class)
@@ -147,32 +145,7 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         return this.project ?: throw Exception()
     }
 
-    protected open inner class MyInputValidator(project: Project?, val directory: PsiDirectory) :
-        ElementCreator(project, this.errorTitle), InputValidator {
-        var createdElements: Array<PsiElement?> = PsiElement.EMPTY_ARRAY
-            private set
+    override fun getCommandName(): String = this.actionName
 
-        override fun checkInput(inputString: String): Boolean {
-            return inputString.isNotEmpty()
-        }
-
-        @Throws(Exception::class)
-        public override fun create(newName: String): Array<PsiElement> {
-            return this@AbstractCreateModuleAction.create(newName, directory)
-        }
-
-        override fun startInWriteAction(): Boolean {
-            return this@AbstractCreateModuleAction.startInWriteAction()
-        }
-
-        public override fun getActionName(newName: String): String {
-            return this@AbstractCreateModuleAction.getActionName(directory, newName)!!
-        }
-
-        override fun canClose(inputString: String): Boolean {
-            this.createdElements = this.tryCreate(inputString)
-
-            return this.checkInput(inputString) && this.createdElements.isNotEmpty()
-        }
-    }
+    override fun getActionName(psiDirectory: PsiDirectory, s: String): String = this.actionName
 }

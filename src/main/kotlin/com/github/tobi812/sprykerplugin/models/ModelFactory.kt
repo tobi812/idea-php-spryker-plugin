@@ -6,6 +6,8 @@ import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProvider
 import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
 import com.github.tobi812.sprykerplugin.models.finder.ClassFinder
 import com.github.tobi812.sprykerplugin.models.finder.ClassFinderInterface
+import com.github.tobi812.sprykerplugin.models.finder.MethodFinder
+import com.github.tobi812.sprykerplugin.models.finder.MethodFinderInterface
 import com.github.tobi812.sprykerplugin.models.generator.*
 import com.github.tobi812.sprykerplugin.models.manager.ClassManager
 import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
@@ -48,6 +50,25 @@ class ModelFactory {
         return FileWriter(project)
     }
 
+    fun createClassFinder(project: Project): ClassFinderInterface {
+        return ClassFinder(project)
+    }
+
+    fun createMethodFinder(project: Project, projectName: String): MethodFinderInterface {
+        return MethodFinder(
+            this.createClassGenerator(project, projectName),
+            this.createClassFinder(project)
+        )
+    }
+
+    private fun createClassGenerator(project: Project, projectName: String): ClassGeneratorInterface {
+        return ClassGenerator(
+            this.createParentGenerator(project, projectName),
+            this.createDocBlockGenerator(project, projectName),
+            this.definitionProvider
+        )
+    }
+
     private fun createClassResolver(project: Project, projectName: String): ClassResolverInterface {
         val config: SprykerPluginConfig = SprykerPluginConfig.getInstance(project)
 
@@ -56,18 +77,6 @@ class ModelFactory {
             config.coreNames,
             this.createClassFinder(project),
             this.definitionProvider
-        )
-    }
-
-    private fun createClassFinder(project: Project): ClassFinderInterface {
-        return ClassFinder(project)
-    }
-
-    private fun createClassGenerator(project: Project, projectName: String): ClassGeneratorInterface {
-        return ClassGenerator(
-                this.createParentGenerator(project, projectName),
-                this.createDocBlockGenerator(project, projectName),
-                this.definitionProvider
         )
     }
 

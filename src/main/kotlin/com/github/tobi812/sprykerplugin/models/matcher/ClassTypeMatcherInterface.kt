@@ -7,6 +7,8 @@ import java.lang.Exception
 interface ClassTypeMatcherInterface {
     fun matchClassType(fqClassName: String): ClassDefinitionInterface?
 
+    fun isSprykerClass(fqClassName: String): Boolean
+
     @Throws(Exception::class)
     fun classTypeMatchesDir(classType: String, directory: PsiDirectory): Boolean
 

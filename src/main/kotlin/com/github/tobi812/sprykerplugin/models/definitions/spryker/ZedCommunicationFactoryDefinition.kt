@@ -11,7 +11,7 @@ class ZedCommunicationFactoryDefinition : ClassDefinitionInterface {
     override val namespacePattern: String
         get() = "{{ projectName }}\\Zed\\{{ bundleName }}\\Communication"
     override val methodForReturnType: String
-        get() = ""
+        get() = "getFactory()"
     override val docBlockClasses: Array<String>
         get() = arrayOf(
                 SprykerConstants.ZED_QUERY_CONTAINER,

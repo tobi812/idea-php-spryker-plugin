@@ -1,8 +1,7 @@
-package com.github.tobi812.sprykerplugin.actions.create.bundle
+package com.github.tobi812.sprykerplugin.actions.create.module
 
 import com.github.tobi812.sprykerplugin.SprykerIcons
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
-import com.intellij.psi.PsiDirectory
 import java.util.ArrayList
 
 class YvesCreateModuleAction private constructor() :
@@ -12,12 +11,10 @@ class YvesCreateModuleAction private constructor() :
         SprykerIcons.SPRYKER_ICON
     ) {
 
+    override val actionName: String = "Create Yves Bundle"
+
     override fun getErrorTitle(): String {
         return "Creating Yves Module Failed!"
-    }
-
-    override fun getActionName(psiDirectory: PsiDirectory, s: String): String {
-        return "Create Yves Bundle"
     }
 
     override val applicationName: String

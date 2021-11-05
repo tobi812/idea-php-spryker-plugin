@@ -3,12 +3,8 @@ package com.github.tobi812.sprykerplugin.models.renderer
 import com.github.tobi812.sprykerplugin.models.renderer.dto.DocBlockItem
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
 import com.github.tobi812.sprykerplugin.models.renderer.dto.UseBlockItem
-import com.intellij.openapi.util.io.StreamUtil
 import com.intellij.openapi.util.text.StringUtil
 import java.io.IOException
-import java.io.InputStreamReader
-import java.io.Reader
-import java.nio.charset.StandardCharsets.UTF_8
 
 class PhpClassRenderer : PhpClassRendererInterface {
     companion object {
@@ -19,7 +15,7 @@ class PhpClassRenderer : PhpClassRendererInterface {
         private const val PARENT_CLASS = "{{ parentClass }}"
         private const val INTERFACE_BLOCK = "{{ interfaceBlock }}"
         private const val METHOD_BLOCK = "{{ methodBlock }}"
-        private const val TEMPLATE_PATH = "template/PhpClassTemplate.php.template"
+        private const val TEMPLATE_PATH = "/template/PhpClassTemplate.php.template"
     }
 
     override fun renderPhpClass(phpClass: PhpClassInterface): String {
@@ -60,9 +56,10 @@ class PhpClassRenderer : PhpClassRendererInterface {
 
     private fun renderUseBlock(phpClass: PhpClassInterface): String {
         val useBlockItems: List<UseBlockItem> = phpClass.useBlockItems
-        if (useBlockItems.size == 0) {
+        if (useBlockItems.isEmpty()) {
             return ""
         }
+
         var useBlock = ""
         for (useItem in phpClass.useBlockItems) {
             useBlock += "use " + useItem.fullQualifiedClassName
@@ -71,6 +68,7 @@ class PhpClassRenderer : PhpClassRendererInterface {
             }
             useBlock += ";\n"
         }
+
         return """
             $useBlock
             
@@ -95,21 +93,17 @@ class PhpClassRenderer : PhpClassRendererInterface {
         return ""
     }
 
-    /**
-     *
-     * @param path String
-     * @return String
-     */
     private fun readFile(path: String): String {
-        var content = ""
-        val reader: Reader = InputStreamReader(PhpClassRenderer::class.java.getResourceAsStream(path), UTF_8)
         try {
+            val resource = javaClass.getResource(path)
 
-            content = StreamUtil.readText(reader)
+            if (resource != null) {
+                return resource.readText()
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
-        return content
+        return ""
     }
 }

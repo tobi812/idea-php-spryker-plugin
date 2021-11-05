@@ -9,12 +9,12 @@ import java.util.ArrayList
 
 class ClassFinder(private val project: Project) : ClassFinderInterface {
     override fun doesClassExist(fullQualifiedName: String): Boolean {
-        val phpClassCollection = getPhpClassCollection(fullQualifiedName)
+        val phpClassCollection = findPhpClassCollection(fullQualifiedName)
         return phpClassCollection.isNotEmpty()
     }
 
     override fun findClass(fullQualifiedCoreName: String): PhpClassInterface? {
-        val phpClassCollection = getPhpClassCollection(fullQualifiedCoreName)
+        val phpClassCollection = this.findPhpClassCollection(fullQualifiedCoreName)
         if (phpClassCollection.isNotEmpty()) {
             val phpClass = phpClassCollection.iterator().next() ?: return null
 
@@ -27,7 +27,7 @@ class ClassFinder(private val project: Project) : ClassFinderInterface {
         return null
     }
 
-    private fun getPhpClassCollection(fullQualifiedName: String): Collection<PhpClass?> {
+    override fun findPhpClassCollection(fullQualifiedName: String): Collection<PhpClass?> {
         return try {
             val phpIndex = PhpIndex.getInstance(project)
             phpIndex.getAnyByFQN(fullQualifiedName)

@@ -1,13 +1,12 @@
 package com.github.tobi812.sprykerplugin.config
 
-import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
-import com.intellij.openapi.components.State
-import com.intellij.openapi.components.Storage
+import com.intellij.openapi.application.Application
+import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(name = "SprykerPluginConfig", storages = [Storage("SprykerPluginConfig.xml")])
+@Service
 class SprykerPluginConfig: PersistentStateComponent<SprykerPluginConfig>
 {
     var projectName = "Pyz"
@@ -32,7 +31,9 @@ class SprykerPluginConfig: PersistentStateComponent<SprykerPluginConfig>
         private var appNames = arrayOf("Yves", "Zed", "Client", "Glue")
 
         fun getInstance(project: Project): SprykerPluginConfig {
-            return ServiceManager.getService(project, SprykerPluginConfig::class.java)
+            return project.service<SprykerPluginConfig>()
         }
     }
+
+
 }

@@ -35,6 +35,8 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
 
         if (this.inputMessage == "" && this.inputTitle == "") {
             this.create("", directory)
+
+            return
         }
 
         val validator = MyInputValidator(project, directory)
@@ -80,6 +82,7 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
     }
 
     override fun isAvailable(dataContext: DataContext): Boolean {
+
         val view = LangDataKeys.IDE_VIEW.getData(dataContext) ?: return false
         val dir = view.orChooseDirectory ?: return false
 
