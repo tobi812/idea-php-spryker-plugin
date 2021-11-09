@@ -1,12 +1,13 @@
 package com.github.tobi812.sprykerplugin.models
 
 import com.github.tobi812.sprykerplugin.config.SprykerPluginConfig
+import com.github.tobi812.sprykerplugin.models.command.AddMissingFactoryMethodsCommand
 import com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand
 import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProvider
 import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
 import com.github.tobi812.sprykerplugin.models.finder.ClassFinder
 import com.github.tobi812.sprykerplugin.models.finder.ClassFinderInterface
-import com.github.tobi812.sprykerplugin.models.finder.MethodFinder
+import com.github.tobi812.sprykerplugin.models.finder.FactoryFinder
 import com.github.tobi812.sprykerplugin.models.finder.MethodFinderInterface
 import com.github.tobi812.sprykerplugin.models.generator.*
 import com.github.tobi812.sprykerplugin.models.manager.ClassManager
@@ -46,6 +47,10 @@ class ModelFactory {
         )
     }
 
+    fun createAddMissingFactoryMethodsCommand(): AddMissingFactoryMethodsCommand {
+        return AddMissingFactoryMethodsCommand(this.createClassRenderer(), this.classTypeMatcher)
+    }
+
     fun createFileWriter(project: Project): FileWriterInterface {
         return FileWriter(project)
     }
@@ -55,7 +60,7 @@ class ModelFactory {
     }
 
     fun createMethodFinder(project: Project, projectName: String): MethodFinderInterface {
-        return MethodFinder(
+        return FactoryFinder(
             this.createClassGenerator(project, projectName),
             this.createClassFinder(project)
         )

@@ -4,6 +4,8 @@ import com.github.tobi812.sprykerplugin.models.renderer.dto.DocBlockItem
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
 import com.github.tobi812.sprykerplugin.models.renderer.dto.UseBlockItem
 import com.intellij.openapi.util.text.StringUtil
+import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.PhpClass
 import java.io.IOException
 
 class PhpClassRenderer : PhpClassRendererInterface {
@@ -41,17 +43,39 @@ class PhpClassRenderer : PhpClassRendererInterface {
 
         var docBlock = "/**\n"
         for (docBlockItem in docBlockItems) {
-            val docBlockElements = arrayOf<String>(
-                docBlockItem.tag,
-                docBlockItem.returnType,
-                docBlockItem.value
-            )
+            val docBlockElements = ArrayList<String>()
+            docBlockElements.add(docBlockItem.tag)
+            docBlockElements.add(docBlockItem.returnType)
+
+            if (docBlockItem.value != null) {
+                docBlockElements.add(docBlockItem.value)
+            }
+
             docBlock += " * @${StringUtil.join(docBlockElements, " ")}\n"
         }
 
         docBlock += " */\n"
 
         return docBlock
+    }
+
+    override fun renderFactoryMethod(phpClass: PhpClass): String {
+        var method: String = "public function create"
+        method += phpClass.name
+        method += "()\n{\n"
+        method += "    return new ${phpClass.name}("
+
+        val constructor = phpClass.constructor
+        if (constructor is Method) {
+            val parameters = constructor.parameters
+            for (parameter in parameters) {
+                System.out.print(parameter.declaredType)
+            }
+        }
+
+        method += ");\n}"
+
+        return method
     }
 
     private fun renderUseBlock(phpClass: PhpClassInterface): String {

@@ -9,7 +9,6 @@ import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.psi.elements.PhpClass
 
-
 class FactoryLineMarkerProvider : RelatedItemLineMarkerProvider() {
     private val modelFactory: ModelFactory = ModelFactory()
 
@@ -17,11 +16,11 @@ class FactoryLineMarkerProvider : RelatedItemLineMarkerProvider() {
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
-        val phpClass: PsiElement = element.context ?: return
-
-        if (phpClass !is PhpClass) {
+        if (element !is PhpClass) {
             return
         }
+
+        val phpClass: PhpClass = element
 
         if (phpClass.isInterface or phpClass.isAbstract or phpClass.isTrait) {
             return
@@ -35,16 +34,24 @@ class FactoryLineMarkerProvider : RelatedItemLineMarkerProvider() {
         val fqClassName = phpClass.fqn
         val classSegments = fqClassName.split("\\\\".toRegex()).toTypedArray()
         val projectName = classSegments[1]
-        val methodFinder = this.modelFactory.createMethodFinder(phpClass.project, projectName)
+        val factoryFinder = this.modelFactory.createMethodFinder(phpClass.project, projectName)
+        val classFactory = factoryFinder.findClassFactory(phpClass) ?: return
+        val method = factoryFinder.findClassFactoryMethod(phpClass, classFactory)
 
-        val methodCollection = methodFinder.findClassFactoryMethod(phpClass)
+        val builder: NavigationGutterIconBuilder<PsiElement> = NavigationGutterIconBuilder
+            .create(SprykerIcons.SPRYKER_ICON)
 
-        if (methodCollection != null && methodCollection.size > 0) {
-            val builder: NavigationGutterIconBuilder<PsiElement> = NavigationGutterIconBuilder.create(SprykerIcons.SPRYKER_ICON)
-                .setTargets(methodCollection)
+        if (method != null) {
+            builder
+                .setTarget(method)
                 .setTooltipText("Navigate to Factory method")
-            result.add(builder.createLineMarkerInfo(element))
+        } else {
+            builder
+                .setTarget(classFactory)
+                .setTooltipText("Navigate to Factory")
         }
+
+        result.add(builder.createLineMarkerInfo(phpClass))
     }
 
     override fun getLineMarkerInfo(element: PsiElement): RelatedItemLineMarkerInfo<*>? {

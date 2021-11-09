@@ -6,13 +6,12 @@ import com.github.tobi812.sprykerplugin.models.definitions.spryker.*
 import com.github.tobi812.sprykerplugin.models.generator.ClassGeneratorInterface
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpClass
-import java.util.ArrayList
 
-class MethodFinder(
+class FactoryFinder(
     private val classGenerator: ClassGeneratorInterface,
-    private val classFinder: ClassFinderInterface) : MethodFinderInterface {
+    private val classFinder: ClassFinderInterface): MethodFinderInterface {
 
-    override fun findClassFactoryMethod(phpClass: PhpClass): ArrayList<Method>? {
+    override fun findClassFactory(phpClass: PhpClass): PhpClass? {
         val fqClassName = phpClass.fqn
         val classSegments = fqClassName.split("\\\\".toRegex()).toTypedArray()
 
@@ -30,17 +29,16 @@ class MethodFinder(
         val config = ClassConfig(moduleName, projectName)
         val fqFactoryName = this.classGenerator
             .createFullQualifiedName(classDefinition, config)
+
         val phpClassCollection = this.classFinder.findPhpClassCollection(fqFactoryName)
 
-        val methodCollection: ArrayList<Method> = ArrayList()
-        if (phpClassCollection.isNotEmpty()) {
-            val factoryClass = phpClassCollection.iterator().next() ?: return null
+        return phpClassCollection.iterator().next()
+    }
 
-            for (method in factoryClass.methods) {
-                if (method.name == "create" + phpClass.name) {
-                    methodCollection.add(method)
-                    return methodCollection
-                }
+    override fun findClassFactoryMethod(phpClass: PhpClass, factory: PhpClass): Method? {
+        for (method in factory.methods) {
+            if (method.name == "create" + phpClass.name) {
+                return method
             }
         }
 
