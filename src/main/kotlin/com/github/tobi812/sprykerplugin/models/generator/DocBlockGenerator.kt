@@ -23,7 +23,7 @@ class DocBlockGenerator(
             val returnClass: PhpClassInterface? = this.classResolver.resolveBundleClass(classType, bundleName)
             if (returnClass != null) {
                 val returnClassName: String = returnClass.getFullQualifiedName()
-                val docBlockMethod = getMethodForType(classType)
+                val docBlockMethod = this.getMethodForType(classType)
                 val docBlockItem = DocBlockItem(
                     "method",
                     returnClassName,

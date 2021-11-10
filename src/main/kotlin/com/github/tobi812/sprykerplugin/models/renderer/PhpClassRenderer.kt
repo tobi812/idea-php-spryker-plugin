@@ -67,15 +67,41 @@ class PhpClassRenderer : PhpClassRendererInterface {
 
         val constructor = phpClass.constructor
         if (constructor is Method) {
-            val parameters = constructor.parameters
-            for (parameter in parameters) {
-                System.out.print(parameter.declaredType)
-            }
+            method += this.renderConstructorCall(constructor, phpClass)
         }
 
-        method += ");\n}"
+        method += "\n     );\n}"
 
         return method
+    }
+
+    private fun renderConstructorCall(
+        constructor: Method,
+        phpClass: PhpClass
+    ): String {
+        val methodCalls = ArrayList<String>()
+        val parameters = constructor.parameters
+        for (parameter in parameters) {
+            if (parameter.declaredType.isEmpty) {
+                methodCalls.add(this.createMethodCallString(parameter.name.capitalize()))
+
+                continue
+            }
+
+            val classNamespace = this.extractModuleNamespace(phpClass.namespaceName)
+            val parameterNamespace = this.extractModuleNamespace(parameter.declaredType.toString())
+
+            val parameterType = parameter.localType.toString().split("\\").last()
+
+            var methodPrefix = "create"
+            if (classNamespace != parameterNamespace) {
+                methodPrefix = "get"
+            }
+
+            methodCalls.add(this.createMethodCallString(parameterType, methodPrefix))
+        }
+
+        return StringUtil.join(methodCalls, ",")
     }
 
     private fun renderUseBlock(phpClass: PhpClassInterface): String {
@@ -129,5 +155,39 @@ class PhpClassRenderer : PhpClassRendererInterface {
         }
 
         return ""
+    }
+
+    private fun extractModuleNamespace(namespace: String): String {
+        val preparedNamespace = namespace.removePrefix("\\")
+        val namespaceSegments = preparedNamespace.split("\\")
+        val appName = namespaceSegments[1]
+        var occurence = 3
+
+        if (appName == "Zed") {
+            occurence = 4
+        }
+
+        val index = this.indexOf(preparedNamespace, "\\", occurence)
+
+        return preparedNamespace.substring(0, index).removeSuffix("\\")
+    }
+
+    private fun indexOf(string: String, subString: String, occurence: Int): Int {
+        var i = 0
+        var match = 0
+        while (i < occurence) {
+            match = string.indexOf(subString, match) + 1
+            i++
+        }
+
+        return match
+    }
+
+    private fun createMethodCallString(className: String, methodPrefix: String = "create"): String {
+        val preparedClassName = className
+            .removeSuffix("Interface")
+            .removePrefix("Abstract")
+
+        return "\n\$this->${methodPrefix}${preparedClassName}()"
     }
 }

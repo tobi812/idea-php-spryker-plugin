@@ -22,7 +22,7 @@ class FactoryLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
         val phpClass: PhpClass = element
 
-        if (phpClass.isInterface or phpClass.isAbstract or phpClass.isTrait) {
+        if (phpClass.isInterface or phpClass.isAbstract or phpClass.isTrait or (phpClass.namespaceName == "")) {
             return
         }
 
