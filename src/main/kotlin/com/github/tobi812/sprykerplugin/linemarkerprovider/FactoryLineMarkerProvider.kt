@@ -1,16 +1,16 @@
 package com.github.tobi812.sprykerplugin.linemarkerprovider
 
 import com.github.tobi812.sprykerplugin.SprykerIcons
-import com.github.tobi812.sprykerplugin.models.ModelFactory
+import com.github.tobi812.sprykerplugin.models.finder.FactoryFinderInterface
 import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
+import com.intellij.openapi.components.service
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.psi.elements.PhpClass
 
 class FactoryLineMarkerProvider : RelatedItemLineMarkerProvider() {
-    private val modelFactory: ModelFactory = ModelFactory()
 
     override fun collectNavigationMarkers(
         element: PsiElement,
@@ -26,15 +26,12 @@ class FactoryLineMarkerProvider : RelatedItemLineMarkerProvider() {
             return
         }
 
-        val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.classTypeMatcher
+        val classTypeMatcher = element.project.service<ClassTypeMatcherInterface>()
         if (classTypeMatcher.isSprykerClass(phpClass.fqn)) {
             return
         }
 
-        val fqClassName = phpClass.fqn
-        val classSegments = fqClassName.split("\\\\".toRegex()).toTypedArray()
-        val projectName = classSegments[1]
-        val factoryFinder = this.modelFactory.createMethodFinder(phpClass.project, projectName)
+        val factoryFinder = element.project.service<FactoryFinderInterface>()
         val classFactory = factoryFinder.findClassFactory(phpClass) ?: return
         val method = factoryFinder.findClassFactoryMethod(phpClass, classFactory)
 

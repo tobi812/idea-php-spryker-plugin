@@ -1,22 +1,23 @@
 package com.github.tobi812.sprykerplugin.models.resolver
 
+import com.github.tobi812.sprykerplugin.config.SprykerPluginConfig
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
 import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
 import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
 import com.github.tobi812.sprykerplugin.models.finder.ClassFinderInterface
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import java.lang.Exception
 
 class ClassResolver(
-    private val projectName: String,
-    private val projectHierarchy: Array<String>,
-    private val classFinder: ClassFinderInterface,
-    private val definitionProvider: DefinitionProviderInterface
+    private val project: Project,
 ) : ClassResolverInterface {
 
     @Throws(Exception::class)
     override fun resolveBundleClass(classType: String, bundleName: String): PhpClassInterface? {
-        val classDefinition: ClassDefinitionInterface = definitionProvider.getDefinitionByType(classType)
+        val projectName = project.service<SprykerPluginConfig>().projectName
+        val classDefinition: ClassDefinitionInterface = project.service<DefinitionProviderInterface>().getDefinitionByType(classType)
         val classPattern: String =
             classDefinition.namespacePattern + "\\" + classDefinition.namePattern
         val fullQualifiedName: String = classPattern
@@ -35,20 +36,24 @@ class ClassResolver(
         findClassBelow: Boolean,
         findInterface: Boolean
     ): PhpClassInterface? {
-        for (projectBelow in this.projectHierarchy) {
-            if (this.projectName == projectBelow && findClassBelow) {
+        val config = project.service<SprykerPluginConfig>()
+        val projectName = config.projectName
+        val classFinder = project.service<ClassFinderInterface>()
+
+        for (projectBelow in config.coreNames) {
+            if (projectName == projectBelow && findClassBelow) {
                 continue
             }
 
             val fullQualifiedCoreName = fullQualifiedName.replaceFirst(projectName.toRegex(), projectBelow)
             if (findInterface) {
-                val coreInterface: PhpClassInterface? = this.classFinder.findClass(fullQualifiedCoreName + "Interface")
+                val coreInterface: PhpClassInterface? = classFinder.findClass(fullQualifiedCoreName + "Interface")
                 if (coreInterface != null) {
                     return coreInterface
                 }
             }
 
-            val coreClass: PhpClassInterface? = this.classFinder.findClass(fullQualifiedCoreName)
+            val coreClass: PhpClassInterface? = classFinder.findClass(fullQualifiedCoreName)
             if (coreClass != null) {
                 return coreClass
             }

@@ -7,17 +7,17 @@ import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInt
 import com.github.tobi812.sprykerplugin.models.renderer.dto.DocBlockItem
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassItem
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import java.lang.Exception
 
 class ClassGenerator(
-    private val parentGenerator: ParentGeneratorInterface,
-    private val docBlockGenerator: DocBlockGeneratorInterface,
-    private val definitionProvider: DefinitionProviderInterface
+    private val project: Project
 ) : ClassGeneratorInterface {
 
     @Throws(Exception::class)
     override fun generateClass(classType: String, config: ClassConfig): PhpClassInterface {
-        val classDefinition: ClassDefinitionInterface = this.definitionProvider.getDefinitionByType(classType)
+        val classDefinition: ClassDefinitionInterface = project.service<DefinitionProviderInterface>().getDefinitionByType(classType)
         val namespace = this.createNamespace(classDefinition, config)
         val className = this.createClassName(classDefinition, config)
         val phpClass: PhpClassInterface = PhpClassItem(namespace, className)
@@ -54,6 +54,7 @@ class ClassGenerator(
     }
 
     private fun addParentClass(phpClass: PhpClassInterface, classDefinition: ClassDefinitionInterface) {
+        val parentGenerator = project.service<ParentGeneratorInterface>()
         val parentClass: PhpClassInterface? = parentGenerator.getParentClass(phpClass, classDefinition)
         if (parentClass != null) {
             phpClass.setParentClass(parentClass)
@@ -67,8 +68,9 @@ class ClassGenerator(
         config: ClassConfig
     ) {
         val bundleName: String = config.moduleName
+        val docBlockGenerator = project.service<DocBlockGeneratorInterface>()
         val docBlockClassTypes: Array<String> = classDefinition.docBlockClasses
-        val docBlockItems: List<DocBlockItem> = this.docBlockGenerator.getDocBlockItems(docBlockClassTypes, bundleName)
+        val docBlockItems: List<DocBlockItem> = docBlockGenerator.getDocBlockItems(docBlockClassTypes, bundleName)
 
         for (docBlockItem in docBlockItems) {
             phpClass.addDocBlockItem(docBlockItem)

@@ -1,12 +1,12 @@
 package com.github.tobi812.sprykerplugin.actions
 
-import com.github.tobi812.sprykerplugin.models.ModelFactory
 import com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand
 import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
 import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -21,10 +21,7 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
         val phpClass = PhpPsiUtil.getParentByCondition<PhpClass>(psiElement, PhpClass.INSTANCEOF) ?: return
         CommandProcessor.getInstance().executeCommand(project, {
             ApplicationManager.getApplication().runWriteAction {
-                val modelFactory = ModelFactory()
-                val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.classTypeMatcher
-                val projectName: String = classTypeMatcher.matchProjectName(phpClass.fqn)
-                val command: UpdateDocBlockCommand = modelFactory.createUpdateDocBlockCommand(project, projectName)
+                val command = project.service<UpdateDocBlockCommand>()
 
                 try {
                     command.updateDocBlock(phpClass, project)
@@ -37,8 +34,8 @@ class SprykerUpdateClassDocBlockAction : PsiElementBaseIntentionAction() {
 
     override fun isAvailable(project: Project, editor: Editor, psiElement: PsiElement): Boolean {
         val phpClass = PhpPsiUtil.getParentByCondition<PhpClass>(psiElement, PhpClass.INSTANCEOF) ?: return false
-        val modelFactory = ModelFactory()
-        val classTypeMatcher: ClassTypeMatcherInterface = modelFactory.classTypeMatcher
+
+        val classTypeMatcher = project.service<ClassTypeMatcherInterface>()
         val classDefinition: ClassDefinitionInterface? = classTypeMatcher.matchClassType(phpClass.fqn)
 
         return classDefinition != null

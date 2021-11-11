@@ -3,6 +3,8 @@ package com.github.tobi812.sprykerplugin.models.matcher
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
 import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
 import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiDirectory
 import org.apache.commons.lang.ArrayUtils
@@ -10,7 +12,7 @@ import java.lang.Exception
 import java.util.ArrayList
 import java.util.regex.Pattern
 
-class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterface) :
+class ClassTypeMatcher(private val project: Project) :
     ClassTypeMatcherInterface {
 
     companion object {
@@ -18,7 +20,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
     }
 
     override fun matchClassType(fqClassName: String): ClassDefinitionInterface? {
-        val classDefinitions: Collection<ClassDefinitionInterface> = this.definitionProvider.allClassDefinitions.values
+        val classDefinitions: Collection<ClassDefinitionInterface> = project.service<DefinitionProviderInterface>().allClassDefinitions.values
         for (classDefinition in classDefinitions) {
             val classTypePattern = this.getClassTypePattern(classDefinition)
             val matched = Pattern.matches(classTypePattern, fqClassName)
@@ -38,7 +40,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
 
     @Throws(Exception::class)
     override fun classTypeMatchesDir(classType: String, directory: PsiDirectory): Boolean {
-        val classDefinition: ClassDefinitionInterface = this.definitionProvider.getDefinitionByType(classType)
+        val classDefinition: ClassDefinitionInterface = project.service<DefinitionProviderInterface>().getDefinitionByType(classType)
         var dir = directory.toString()
         dir = dir.replace("/", "\\")
         val bundleName = this.matchBundleName(classType, directory)
@@ -50,7 +52,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
 
     @Throws(Exception::class)
     override fun matchProjectName(classType: String, psiDirectory: PsiDirectory): String {
-        val namespacePattern: String = this.definitionProvider.getDefinitionByType(classType).namespacePattern
+        val namespacePattern: String = project.service<DefinitionProviderInterface>().getDefinitionByType(classType).namespacePattern
         val projectPosition = this.getPlaceholderPosition(namespacePattern, SprykerConstants.PROJECT_NAME_PLACEHOLDER)
         var currentDirectory: PsiDirectory? = psiDirectory
         for (i in 1 until projectPosition) {
@@ -74,7 +76,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
 
     @Throws(Exception::class)
     fun matchClassTypesByDir(directory: PsiDirectory): ArrayList<String> {
-        val classDefinitions: Collection<ClassDefinitionInterface> = definitionProvider
+        val classDefinitions: Collection<ClassDefinitionInterface> = project.service<DefinitionProviderInterface>()
             .allClassDefinitions
             .values
         val matchedTypes = ArrayList<String>()
@@ -93,7 +95,7 @@ class ClassTypeMatcher(private val definitionProvider: DefinitionProviderInterfa
 
     @Throws(Exception::class)
     override fun matchBundleName(classType: String, psiDirectory: PsiDirectory): String {
-        val namespacePattern: String = this.definitionProvider.getDefinitionByType(classType).namespacePattern
+        val namespacePattern: String = project.service<DefinitionProviderInterface>().getDefinitionByType(classType).namespacePattern
         val bundlePosition = this.getPlaceholderPosition(namespacePattern, SprykerConstants.MODULE_NAME_PLACEHOLDER)
         var currentDirectory: PsiDirectory = psiDirectory
         for (i in 1 until bundlePosition) {

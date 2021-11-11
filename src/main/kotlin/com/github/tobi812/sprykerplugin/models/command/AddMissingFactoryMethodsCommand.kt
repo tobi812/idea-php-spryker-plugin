@@ -3,22 +3,18 @@ package com.github.tobi812.sprykerplugin.models.command
 import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
 import com.github.tobi812.sprykerplugin.models.renderer.PhpClassRendererInterface
 import com.github.tobi812.sprykerplugin.models.renderer.dto.DocBlockItem
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
-import com.jetbrains.php.codeInsight.PhpCodeInsightUtil
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocComment
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory
 import com.jetbrains.php.lang.psi.PhpPsiUtil
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpClass
-import com.jetbrains.php.lang.psi.elements.PhpPsiElement
-import com.jetbrains.php.lang.psi.elements.PhpUseList
 
 class AddMissingFactoryMethodsCommand(
-    private val phpClassRenderer: PhpClassRendererInterface,
-    private val classTypeMatcher: ClassTypeMatcherInterface
 ) {
     fun addMissingFactoryMethods(project: Project, psiElement: PsiElement) {
         val directory = psiElement.containingFile.containingDirectory
@@ -29,8 +25,10 @@ class AddMissingFactoryMethodsCommand(
 
         val mainClass = PhpPsiUtil.getParentByCondition<PhpClass>(psiElement, PhpClass.INSTANCEOF) ?: return
         val phpClasses = this.findPhpClasses(directory)
+        val classTypeMatcher = project.service<ClassTypeMatcherInterface>()
+
         for (phpClass in phpClasses) {
-            if (this.classTypeMatcher.isSprykerClass(phpClass.fqn) || phpClass.isAbstract || phpClass.isTrait || phpClass.isInterface) {
+            if (classTypeMatcher.isSprykerClass(phpClass.fqn) || phpClass.isAbstract || phpClass.isTrait || phpClass.isInterface) {
                 continue
             }
 
@@ -40,7 +38,7 @@ class AddMissingFactoryMethodsCommand(
             }
 
             val useStatement = PhpPsiElementFactory.createUseStatement(project, phpClass.fqn, null)
-            val factoryMethod: String = phpClassRenderer.renderFactoryMethod(phpClass)
+            val factoryMethod: String = project.service<PhpClassRendererInterface>().renderFactoryMethod(phpClass)
             method = PhpPsiElementFactory.createMethod(project, factoryMethod)
             val comment = this.createDocComment(phpClass, project)
 
@@ -86,7 +84,7 @@ class AddMissingFactoryMethodsCommand(
         val comment = PhpPsiElementFactory.createFromText(
             project,
             PhpDocComment::class.java,
-            this.phpClassRenderer.renderDocBlock(docBlockItems)
+            project.service<PhpClassRendererInterface>().renderDocBlock(docBlockItems)
         )
         return comment
     }

@@ -1,13 +1,14 @@
 package com.github.tobi812.sprykerplugin.actions
 
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
-import com.github.tobi812.sprykerplugin.models.ModelFactory
 import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
+import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
 import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
 import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
 import com.intellij.ide.actions.CreateElementActionBase
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDirectory
@@ -18,7 +19,6 @@ import javax.swing.Icon
 
 abstract class AbstractCreateClassTypeAction protected constructor(text: String, description: String, icon: Icon?) :
     CreateElementActionBase(text, description, icon) {
-    private val modelFactory: ModelFactory = ModelFactory()
     private var project: Project? = null
     protected abstract val classType: String
     protected abstract val actionName: String
@@ -70,11 +70,11 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
     ): Array<PsiElement> {
         val classType: String = this.classType
 
-        val classTypeMatcher: ClassTypeMatcherInterface = this.modelFactory.classTypeMatcher
+        val classTypeMatcher = this.getProject().service<ClassTypeMatcherInterface>()
         val bundleName: String = classTypeMatcher.matchBundleName(classType, psiDirectory)
         val projectName: String = classTypeMatcher.matchProjectName(classType, psiDirectory)
         val classConfig = ClassConfig(bundleName, projectName, className)
-        val classManager: ClassManagerInterface = this.modelFactory.createClassManager(this.getProject(), projectName)
+        val classManager = this.getProject().service<ClassManagerInterface>()
 
         val psiElement = classManager.handleClass(psiDirectory, classType, classConfig)
 
@@ -98,15 +98,14 @@ abstract class AbstractCreateClassTypeAction protected constructor(text: String,
     protected open fun classTypeMatchesDir(directory: PsiDirectory): Boolean {
         return try {
             val classType: String = this.classType
-            val classTypeMatcher = this.modelFactory.classTypeMatcher
+            val classTypeMatcher = this.getProject().service<ClassTypeMatcherInterface>()
 
             if (!classTypeMatcher.classTypeMatchesDir(classType, directory)) {
                 return false
             }
 
             val bundleName = classTypeMatcher.matchBundleName(classType, directory)
-            val classDefinition: ClassDefinitionInterface = this.modelFactory
-                .definitionProvider
+            val classDefinition: ClassDefinitionInterface = this.getProject().service<DefinitionProviderInterface>()
                 .getDefinitionByType(classType)
             val className: String = classDefinition.namePattern
                 .replace(SprykerConstants.MODULE_NAME_PLACEHOLDER, bundleName)

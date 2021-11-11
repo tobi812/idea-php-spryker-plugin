@@ -4,12 +4,14 @@ import com.github.tobi812.sprykerplugin.actions.ClassConfig
 import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
 import com.github.tobi812.sprykerplugin.models.definitions.spryker.*
 import com.github.tobi812.sprykerplugin.models.generator.ClassGeneratorInterface
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpClass
 
 class FactoryFinder(
-    private val classGenerator: ClassGeneratorInterface,
-    private val classFinder: ClassFinderInterface): MethodFinderInterface {
+    private val project: Project
+): FactoryFinderInterface {
 
     override fun findClassFactory(phpClass: PhpClass): PhpClass? {
         val fqClassName = phpClass.fqn
@@ -27,10 +29,10 @@ class FactoryFinder(
         } ?: return null
 
         val config = ClassConfig(moduleName, projectName)
-        val fqFactoryName = this.classGenerator
-            .createFullQualifiedName(classDefinition, config)
+        val classGenerator = project.service<ClassGeneratorInterface>()
+        val fqFactoryName = classGenerator.createFullQualifiedName(classDefinition, config)
 
-        val phpClassCollection = this.classFinder.findPhpClassCollection(fqFactoryName)
+        val phpClassCollection = project.service<ClassFinderInterface>().findPhpClassCollection(fqFactoryName)
 
         return phpClassCollection.iterator().next()
     }

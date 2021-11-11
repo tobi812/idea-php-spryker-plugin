@@ -9,9 +9,43 @@
     <depends>com.jetbrains.php</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!--<applicationService serviceImplementation="com.github.tobi812.sprykerplugin.services.MyApplicationService"/> -->
         <projectService serviceImplementation="com.github.tobi812.sprykerplugin.config.SprykerPluginConfig"/>
 
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.definitions.DefinitionProvider"/>
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcher"/>
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.renderer.PhpClassRendererInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.renderer.PhpClassRenderer" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.writer.FileWriter" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.finder.ClassFinderInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.finder.ClassFinder" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.finder.FactoryFinderInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.finder.FactoryFinder" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.resolver.ClassResolverInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.resolver.ClassResolver" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.generator.DocBlockGeneratorInterface"
+                                serviceImplementation="com.github.tobi812.sprykerplugin.models.generator.DocBlockGenerator" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.generator.ParentGeneratorInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.generator.ParentGenerator" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.generator.ClassGeneratorInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.generator.ClassGenerator" />
+
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.models.manager.ClassManager" />
+
+        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.models.command.AddMissingFactoryMethodsCommand"/>
+        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand"/>
 
         <intentionAction>
             <className>com.github.tobi812.sprykerplugin.actions.SprykerUpdateClassDocBlockAction</className>

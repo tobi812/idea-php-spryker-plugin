@@ -2,14 +2,15 @@ package com.github.tobi812.sprykerplugin.actions.create.module
 
 import com.github.tobi812.sprykerplugin.actions.ClassConfig
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
-import com.github.tobi812.sprykerplugin.models.ModelFactory
 import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
 import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
 import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
+import com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface
 import com.intellij.ide.IdeView
 import com.intellij.ide.actions.CreateElementActionBase
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDirectory
@@ -22,7 +23,6 @@ import javax.swing.Icon
 @Suppress("NAME_SHADOWING")
 abstract class AbstractCreateModuleAction protected constructor(text: String?, description: String?, icon: Icon?) :
     CreateElementActionBase(text, description, icon) {
-    protected var modelFactory: ModelFactory = ModelFactory()
     private var project: Project? = null
     protected abstract val actionName: String
     abstract val applicationName: String
@@ -80,9 +80,8 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
         moduleDirectory: PsiDirectory,
         classConfig: ClassConfig
     ): Array<PsiElement> {
-        val projectName = classConfig.projectName
-        val classManager: ClassManagerInterface = this.modelFactory.createClassManager(project, projectName)
-        val definitionProvider: DefinitionProviderInterface = this.modelFactory.definitionProvider
+        val classManager = this.getProject().service<ClassManagerInterface>()
+        val definitionProvider = project.service<DefinitionProviderInterface>()
         val createdElements: ArrayList<PsiElement> = ArrayList<PsiElement>()
 
         for (classType in this.classTypes) {
@@ -136,8 +135,7 @@ abstract class AbstractCreateModuleAction protected constructor(text: String?, d
 
     @Throws(Exception::class)
     protected fun createSubdirectory(fileDirectory: PsiDirectory, subDirectoryName: String): PsiDirectory {
-        return this.modelFactory
-            .createFileWriter(this.getProject())
+        return this.getProject().service<FileWriterInterface>()
             .createSubdirectory(fileDirectory, subDirectoryName) ?: throw Exception()
     }
 

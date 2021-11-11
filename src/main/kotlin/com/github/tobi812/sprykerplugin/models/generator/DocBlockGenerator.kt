@@ -5,12 +5,13 @@ import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInt
 import com.github.tobi812.sprykerplugin.models.renderer.dto.DocBlockItem
 import com.github.tobi812.sprykerplugin.models.renderer.dto.PhpClassInterface
 import com.github.tobi812.sprykerplugin.models.resolver.ClassResolverInterface
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
 import java.lang.Exception
 import java.util.ArrayList
 
 class DocBlockGenerator(
-    private val classResolver: ClassResolverInterface,
-    private val definitionProvider: DefinitionProviderInterface
+    private val project: Project
 ) : DocBlockGeneratorInterface {
 
     @Throws(Exception::class)
@@ -18,9 +19,10 @@ class DocBlockGenerator(
         classTypes: Array<String>,
         bundleName: String
     ): List<DocBlockItem> {
+        val classResolver = project.service<ClassResolverInterface>()
         val docBlockItemList: MutableList<DocBlockItem> = ArrayList<DocBlockItem>()
         for (classType in classTypes) {
-            val returnClass: PhpClassInterface? = this.classResolver.resolveBundleClass(classType, bundleName)
+            val returnClass: PhpClassInterface? = classResolver.resolveBundleClass(classType, bundleName)
             if (returnClass != null) {
                 val returnClassName: String = returnClass.getFullQualifiedName()
                 val docBlockMethod = this.getMethodForType(classType)
@@ -38,7 +40,8 @@ class DocBlockGenerator(
 
     @Throws(Exception::class)
     private fun getMethodForType(classType: String): String {
-        val classDefinition: ClassDefinitionInterface = this.definitionProvider.getDefinitionByType(classType)
+        val classDefinition: ClassDefinitionInterface = project.service<DefinitionProviderInterface>()
+            .getDefinitionByType(classType)
 
         return classDefinition.methodForReturnType
     }
