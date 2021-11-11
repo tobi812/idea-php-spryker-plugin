@@ -1,1 +1,1 @@
-rootProject.name = "idea-php-spryker-plugin"
+rootProject.name = "PhpStorm Spryker Plugin"
