@@ -1,10 +1,10 @@
 package com.github.tobi812.sprykerplugin.actions
 
 import com.github.tobi812.sprykerplugin.constants.SprykerConstants
-import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
-import com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface
-import com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface
-import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
+import com.github.tobi812.sprykerplugin.services.definitions.ClassDefinitionInterface
+import com.github.tobi812.sprykerplugin.services.definitions.DefinitionProviderInterface
+import com.github.tobi812.sprykerplugin.services.manager.ClassManagerInterface
+import com.github.tobi812.sprykerplugin.services.matcher.ClassTypeMatcherInterface
 import com.intellij.ide.actions.CreateElementActionBase
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.LangDataKeys

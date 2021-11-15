@@ -1,8 +1,8 @@
 package com.github.tobi812.sprykerplugin.actions
 
-import com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand
-import com.github.tobi812.sprykerplugin.models.definitions.ClassDefinitionInterface
-import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
+import com.github.tobi812.sprykerplugin.services.command.UpdateDocBlockCommand
+import com.github.tobi812.sprykerplugin.services.definitions.ClassDefinitionInterface
+import com.github.tobi812.sprykerplugin.services.matcher.ClassTypeMatcherInterface
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor

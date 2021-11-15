@@ -11,41 +11,41 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.github.tobi812.sprykerplugin.config.SprykerPluginConfig"/>
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.definitions.DefinitionProviderInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.definitions.DefinitionProvider"/>
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.definitions.DefinitionProviderInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.definitions.DefinitionProvider"/>
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcher"/>
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.matcher.ClassTypeMatcherInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.matcher.ClassTypeMatcher"/>
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.renderer.PhpClassRendererInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.renderer.PhpClassRenderer" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.renderer.PhpClassRendererInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.renderer.PhpClassRenderer" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.writer.FileWriterInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.writer.FileWriter" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.writer.FileWriterInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.writer.FileWriter" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.finder.ClassFinderInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.finder.ClassFinder" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.finder.ClassFinderInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.finder.ClassFinder" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.finder.FactoryFinderInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.finder.FactoryFinder" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.finder.FactoryFinderInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.finder.FactoryFinder" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.resolver.ClassResolverInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.resolver.ClassResolver" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.resolver.ClassResolverInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.resolver.ClassResolver" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.generator.DocBlockGeneratorInterface"
-                                serviceImplementation="com.github.tobi812.sprykerplugin.models.generator.DocBlockGenerator" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.generator.DocBlockGeneratorInterface"
+                                serviceImplementation="com.github.tobi812.sprykerplugin.services.generator.DocBlockGenerator" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.generator.ParentGeneratorInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.generator.ParentGenerator" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.generator.ParentGeneratorInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.generator.ParentGenerator" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.generator.ClassGeneratorInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.generator.ClassGenerator" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.generator.ClassGeneratorInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.generator.ClassGenerator" />
 
-        <projectService serviceInterface="com.github.tobi812.sprykerplugin.models.manager.ClassManagerInterface"
-                        serviceImplementation="com.github.tobi812.sprykerplugin.models.manager.ClassManager" />
+        <projectService serviceInterface="com.github.tobi812.sprykerplugin.services.manager.ClassManagerInterface"
+                        serviceImplementation="com.github.tobi812.sprykerplugin.services.manager.ClassManager" />
 
-        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.models.command.AddMissingFactoryMethodsCommand"/>
-        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.models.command.UpdateDocBlockCommand"/>
+        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.services.command.AddMissingFactoryMethodsCommand"/>
+        <projectService serviceImplementation="com.github.tobi812.sprykerplugin.services.command.UpdateDocBlockCommand"/>
 
         <intentionAction>
             <className>com.github.tobi812.sprykerplugin.actions.SprykerUpdateClassDocBlockAction</className>

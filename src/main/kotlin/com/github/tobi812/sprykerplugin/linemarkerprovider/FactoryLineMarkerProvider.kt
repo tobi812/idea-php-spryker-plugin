@@ -1,8 +1,8 @@
 package com.github.tobi812.sprykerplugin.linemarkerprovider
 
 import com.github.tobi812.sprykerplugin.SprykerIcons
-import com.github.tobi812.sprykerplugin.models.finder.FactoryFinderInterface
-import com.github.tobi812.sprykerplugin.models.matcher.ClassTypeMatcherInterface
+import com.github.tobi812.sprykerplugin.services.finder.FactoryFinderInterface
+import com.github.tobi812.sprykerplugin.services.matcher.ClassTypeMatcherInterface
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder

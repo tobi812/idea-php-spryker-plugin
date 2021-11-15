@@ -1,7 +1,7 @@
 package com.github.tobi812.sprykerplugin.actions
 
-import com.github.tobi812.sprykerplugin.models.command.AddMissingFactoryMethodsCommand
-import com.github.tobi812.sprykerplugin.models.definitions.spryker.*
+import com.github.tobi812.sprykerplugin.services.command.AddMissingFactoryMethodsCommand
+import com.github.tobi812.sprykerplugin.services.definitions.spryker.*
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
