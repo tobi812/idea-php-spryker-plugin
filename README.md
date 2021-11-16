@@ -1,38 +1,66 @@
-# idea-php-spryker-plugin
+Spryker PhpStorm Plugin
+========================
 
 ![Build](https://github.com/tobi812/idea-php-spryker-plugin/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Verify the [pluginGroup](/gradle.properties), [plugin ID](/src/main/resources/META-INF/plugin.xml) and [sources package](/src/main/kotlin).
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the Plugin ID in the above README badges.
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
+[![Version](https://img.shields.io/jetbrains/plugin/v/8490-spryker-plugin.svg)](https://plugins.jetbrains.com/plugin/8490-spryker-plugin)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/8490-spryker-plugin.svg)](https://plugins.jetbrains.com/plugin/8490-spryker-plugin)
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+The Spryker Plugin was built to improve the developer experience with the Spryker.
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
 <!-- Plugin description end -->
 
 ## Installation
 
-- Using IDE built-in plugin system:
-  
+- Using PhpStorms built-in plugin system:
+
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "idea-php-spryker-plugin"</kbd> >
   <kbd>Install Plugin</kbd>
-  
+
 - Manually:
 
   Download the [latest release](https://github.com/tobi812/idea-php-spryker-plugin/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+
+Features
+------------------------
+
+
+## 1. Generate DocBlocks automatically
+
+Some of the Spryker base classes, have very special DocBlocks. In order to generate them with the help of the Plugin, browse to the class, press `alt` + `enter` and select `Update Spryker DocBlock`.
+
+
+![Generate DocBlock](https://raw.githubusercontent.com/tobi812/idea-php-spryker-plugin/master/docs/update_docblock.gif)
+
+## 2. Generate Spryker classes
+
+It also possible to generate base classes of Spryker automatically.
+
+- right-click the directory in the project structure
+- select `New` and (if possible) the file you want to create will appear in the menu
+
+![Generate DocBlock](https://raw.githubusercontent.com/tobi812/idea-php-spryker-plugin/master/docs/create_spryker_file.gif)
+
+## 3. Bundle generation
+
+To create a new bundle:
+
+- right-click the app directory (Yves, Zed or Client)
+- select `New and Create (Yves|Zed|Client) Bundle`
+
+![Generate DocBlock](https://raw.githubusercontent.com/tobi812/idea-php-spryker-plugin/master/docs/create_spryker_bundle.gif)
+
+## 4. Navigate to corresponding factory method
+
+Next to the definition of a module class the Spryker logo will appear, which will navigate you to the corresponding factory 
+method.
+
+## 5. Generate factory methods automatically
+
+Browse to any Spryker factory select the class name and press `alt` + `enter` and `Add Spryker missing Factory methods` to automatically generate missing factory methods.
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
