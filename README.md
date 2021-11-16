@@ -55,7 +55,12 @@ To create a new bundle:
 
 ## 4. Navigate to corresponding factory method
 
+Next to the definition of a module class the Spryker logo will appear, which will navigate you to the corresponding factory 
+method.
+
 ## 5. Generate factory methods automatically
+
+Browse to any Spryker factory select the class name and press `alt` + `enter` and `Add Spryker missing Factory methods` to automatically generate missing factory methods.
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
