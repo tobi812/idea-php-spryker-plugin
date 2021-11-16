@@ -11,8 +11,7 @@ import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocComment
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory
 import com.jetbrains.php.lang.psi.PhpPsiUtil
-import com.jetbrains.php.lang.psi.elements.Method
-import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.*
 
 class AddMissingFactoryMethodsCommand(
 ) {
@@ -37,24 +36,21 @@ class AddMissingFactoryMethodsCommand(
                 continue
             }
 
-            val useStatement = PhpPsiElementFactory.createUseStatement(project, phpClass.fqn, null)
             val factoryMethod: String = project.service<PhpClassRendererInterface>().renderFactoryMethod(phpClass)
             method = PhpPsiElementFactory.createMethod(project, factoryMethod)
             val comment = this.createDocComment(phpClass, project)
 
-//            val mainClassParent = mainClass.parent
-//            if (mainClassParent is PhpPsiElement) {
-//                val usesStatments = PhpCodeInsightUtil.collectImports(mainClassParent).first()
-//                if (usesStatments is PhpUseList) {
-//                    for (use in usesStatments.declarations) {
-//                        System.out.println(use.name)
-//                        System.out.println(use.aliasName)
-//                    }
-//                }
-//            }
+            val mainClassParent = mainClass.parent
 
             if (mainClass.namespaceName != phpClass.namespaceName) {
-                mainClass.parent.addAfter(useStatement, mainClass.parent.firstChild)
+                var useStatement: PhpUseList? = null
+                if (mainClassParent is PhpPsiElement) {
+                    useStatement = this.getUseStatement(mainClassParent, project, phpClass)
+                }
+
+                if (useStatement != null) {
+                    mainClassParent.addAfter(useStatement, mainClass.parent.firstChild)
+                }
             }
 
             if (comment != null) {
@@ -72,7 +68,7 @@ class AddMissingFactoryMethodsCommand(
         val docBlockItems = ArrayList<DocBlockItem>()
 
         var returnType: String = phpClass.fqn
-        if (phpClass.implementedInterfaces.size > 0) {
+        if (phpClass.implementedInterfaces.isNotEmpty()) {
             val firstInterface: PhpClass? = phpClass.implementedInterfaces.iterator().next()
             if (firstInterface is PhpClass) {
                 returnType = firstInterface.fqn
@@ -109,5 +105,26 @@ class AddMissingFactoryMethodsCommand(
         }
 
         return phpClasses
+    }
+
+    private fun getUseStatement(mainClassParent: PhpPsiElement, project: Project, phpClass: PhpClass): PhpUseList? {
+        var alias: String? = null
+        for (child in mainClassParent.children) {
+            if (child !is PhpUseList) {
+                continue
+            }
+
+            for (use in child.declarations) {
+                if (use.fqn == phpClass.fqn) {
+                    return null
+                }
+
+                if (use.name == phpClass.name) {
+                    alias = phpClass.name + "Alias"
+                }
+            }
+        }
+
+        return PhpPsiElementFactory.createUseStatement(project, phpClass.fqn, alias)
     }
 }

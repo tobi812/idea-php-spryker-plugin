@@ -5,19 +5,27 @@ Spryker PhpStorm Plugin
 [![Version](https://img.shields.io/jetbrains/plugin/v/8490-spryker-plugin.svg)](https://plugins.jetbrains.com/plugin/8490-spryker-plugin)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/8490-spryker-plugin.svg)](https://plugins.jetbrains.com/plugin/8490-spryker-plugin)
 
+<!-- Plugin description -->
 
-Install Plugin
-------------------------
+The Spryker Plugin was built to improve the developer experience with the Spryker.
 
-* Navigate to `Preferences` > `Plugins` > `Browse Repositories`
-* Type `Spryker`
-* Click `Install`
+<!-- Plugin description end -->
+
+## Installation
+
+- Using PhpStorms built-in plugin system:
+
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "idea-php-spryker-plugin"</kbd> >
+  <kbd>Install Plugin</kbd>
+
+- Manually:
+
+  Download the [latest release](https://github.com/tobi812/idea-php-spryker-plugin/releases/latest) and install it manually using
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 
 Features
 ------------------------
-
-The Spryker-Plugin was built to improve the daily development-experience with the Spryker-Framework.
 
 
 ## 1. Generate DocBlocks automatically

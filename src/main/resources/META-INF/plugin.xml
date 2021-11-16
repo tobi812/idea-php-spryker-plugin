@@ -64,7 +64,7 @@
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.tobi812.sprykerplugin.listeners.MyProjectManagerListener"
+        <listener class="com.github.tobi812.sprykerplugin.listeners.SprykerProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 
